@@ -1,0 +1,190 @@
+#|
+=============
+QWERTY layout
+=============
+
+TEMPLATE keys:
+
+(defsrc
+  esc   f1   f2   f3   f4   f5   f6   f7   f8   f9   f10  f11  f12         prnt  nlck  pause
+  `     1    2    3    4    5    6    7    8    9    0    -    =     bspc  ins   home  pgup
+  tab   q    w    e    r    t    y    u    i    o    p    [    ]     \     del   end   pgdn
+  caps  a    s    d    f    g    h    j    k    l    ;    '    enter
+  lsft  z    x    c    v    b    n    m    ,    .    /         rsft              up
+  lctl  lmet lalt           spc                 ralt fn   menu rctl        left  down  right
+)
+
+OTHER keys:
+
+VolumeUp VolumeDown VolumeMute
+brup brdn ; brightness
+MediaTrackPrevious MediaTrackNext MediaPlayPause
+mouseleft mouseright mousemid mousebackward mouseforward mousewheelup mousewheeldown mousewheelleft mousewheelright
+homepage media mail email calc
+nop0 nop1 ... nop9
+
+lrld lrld-prev lrld-next
+|#
+
+;; some useful resource: https://zhuanlan.zhihu.com/p/595742183
+(defcfg
+  ;; Allow kanata to process keys even if not defined
+  ;; process-unmapped-keys yes
+
+  ;; Specify device to intercept
+  ;; linux-dev /dev/input/by-id/some_kbd
+)
+
+;; (defoverrides
+;; )
+
+(defvar
+  tap-timeout       200
+  hold-timeout      200
+  tt                $tap-timeout
+  ht                $hold-timeout
+)
+
+(defalias
+  tab-layer         (layer-while-held tab-layer) ;; temporarily enter tab-layer
+  tab               (tap-hold-press $tt $ht tab @tab-layer) ;; single: tab, held: @tab-layer
+  number            (layer-while-held number-layer)
+  ;; backtick          (tap-hold-press $tt $ht ` @number) ;; single: `, held: @number-layer
+
+  delete-word       C-bspc
+  delete-line       (macro S-home bspc)
+  tab-enter         (macro tab enter)
+  win-left          (on-press tap-vkey vk-win-left)
+  win-right         (on-press tap-vkey vk-win-right)
+  win-up            (on-press tap-vkey vk-win-up)
+  win-down          (on-press tap-vkey vk-win-down)
+
+  glazewm-focus-recent-workspace  A-d
+  glazewm-focus-next-workspace    A-s
+)
+
+(defvirtualkeys
+  vk-win-left   (macro M-left)
+  vk-win-right  (macro M-right)
+  vk-win-up     (macro M-up)
+  vk-win-down   (macro M-down)
+)
+
+;; (defalias
+;;   ;; mouse-up    (movemouse-accel-up 1 1000 1 10)
+;;   ;; mouse-left  (movemouse-accel-left 1 1000 1 15)
+;;   ;; mouse-down  (movemouse-accel-down 1 1000 1 15)
+;;   ;; mouse-right (movemouse-accel-right 1 1000 1 15)
+;;
+;;   win-layer         (layer-while-held win-layer)
+;;   win               (tap-hold-press $tt $ht lmet @win-layer) ;; single: win, held: @win-layer
+;;   win-tab           (on-press tap-vkey vk-win-tab)
+;;   win-spc           (on-press tap-vkey vk-win-spc)
+;; )
+
+(defsrc)
+
+(deflayermap (base)
+  tab   @tab
+  esc   `
+  caps  esc
+  lctl  lctl
+  lalt  lalt
+  rctl  @number
+  menu  @number
+  ralt  @number
+
+  ;; lmet  @win
+)
+
+(deflayermap (tab-layer)
+  t     tab
+  j     down
+  k     up
+  h     left
+  l     right
+  b     home
+  e     end
+  g     pgup
+  f     pgdn
+  d     del
+  i     bspc
+  w     @delete-word
+  u     @delete-line
+  ,     @win-left
+  .     @win-right
+  p     @win-up
+  n     @win-down
+
+  m     VolumeMute
+  -     VolumeDown
+  =     VolumeUp
+  [     MediaTrackPrevious
+  ]     MediaTrackNext
+  \     MediaPlayPause
+
+  enter @tab-enter
+
+  r     lrld
+  spc   lrld-next
+
+  ;; === glazewm ===
+  ;     @glazewm-focus-recent-workspace
+  '     @glazewm-focus-next-workspace
+)
+
+(deflayermap (number-layer)
+  1     f1
+  2     f2
+  3     f3
+  4     f4
+  5     f5
+  6     f6
+  7     f7
+  8     f8
+  9     f9
+  0     f10
+  -     f11
+  =     f12
+
+  w     [
+  e     S-[ ;; {
+  r     S-9 ;; (
+  u     S-0 ;; )
+  i     S-] ;; }
+  o     ]
+
+  [     S-6 ;; ^
+  ]     S-4 ;; $
+
+  a     1
+  s     2
+  d     3
+  f     4
+  g     5
+  h     6
+  j     7
+  k     8
+  l     9
+  ;     0
+  '     -
+
+  b     S-8 ;; *
+  n     +
+  m     =
+)
+
+;; (defvirtualkeys
+;;   vk-win-tab    (macro M-tab)
+;;   vk-win-spc    (macro M-spc)
+;; )
+;;
+;; ;; need to enable process-unmapped-keys
+;; (deflayermap (win-layer)
+;;   tab   @win-tab
+;;   spc   @win-spc
+;;   ,     mlft
+;;   .     mrgt
+;;   [     mbck
+;;   ]     mfwd
+;; )

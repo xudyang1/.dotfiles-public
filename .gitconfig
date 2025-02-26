@@ -1,0 +1,210 @@
+[user]
+  useConfigOnly = true
+[credential]
+  # only work for HTTPS
+  # for SSH passphrase, use ssh-agent
+  helper      = "cache --timeout=86400"
+[gpg]
+  program     = gpg
+[core]
+  safecrlf    = warn
+  # short-hand to cover blank-at-eol, blank-at-eof
+  whitespace  = space-before-tab, trailing-space
+  # attributesFile  = ~/.config/git/.gitattributes
+  # disable for git version < 2.37: `warning: Empty last update token.`
+  fsmonitor   = true
+  fileMode    = false
+  editor      = nvim
+  # delta
+  pager       = delta
+[apply]
+  # detect whitespace errors when applying a patch
+  whitespace  = error-all
+[init]
+  defaultBranch = main
+[clone]
+  filterSubmodules = true
+[status]
+  # submodulesummary = 1
+[branch]
+  # show most recently changed branches first
+  sort        = -committerdate
+[commit]
+  gpgSign     = true
+  verbose     = true
+  template    = ~/.config/git/.gitmessage
+[tag]
+  gpgSign     = true
+[fetch]
+  prune       = true
+[rebase]
+  autoSquash  = true
+[push]
+  default     = simple
+  autoSetupRemote = true
+  gpgSign     = if-asked
+  recurseSubmodules = check
+[interactive]
+  # delta
+  diffFilter  = delta --color-only
+[delta]
+  # use n and N to move between diff sections
+  navigate    = true
+  # set to true if terminal is light background
+  light       = false
+  side-by-side = true
+  line-numbers = true
+[diff]
+  renames     = copy
+  check       = true
+  tool        = nvimdiff
+  # delta
+  colorMoved  = default
+[difftool]
+  prompt      = false
+[difftool "nvimdiff"]
+  # $LOCAL: the name of the temporary file containing the contents of the diff pre-image
+  # $REMOTE: the name of the temporary file containing the contents of the diff post-image.
+  # e.g., git difftool pre-image-commit-hash..post-image-commit-hash
+  cmd         = "nvim -d \"$LOCAL\" \"$REMOTE\" -c 'wincmd l | norm ]c'"
+[merge]
+  # delta [merge (default), diff3 (include original text), zdiff3 (minimize conflict region, git>=2.35)]
+  conflictstyle = diff3
+  tool          = nvimdiff
+  # nvimdiff  layout="(LOCAL,BASE,REMOTE)/MERGED" # default layout when none is specified
+  # nvimdiff1 layout="@LOCAL,REMOTE"
+  # nvimdiff2 layout="LOCAL,MERGED,REMOTE"
+  # nvimdiff3 layout="MERGED"
+[mergetool]
+  prompt      = true
+  # prevent generating .orig files
+  keepBackup  = false
+# @link: https://github.com/git/git/blob/master/mergetools/vimdiff
+[mergetool "nvimdiff"]
+  # nvimdiff: layout = "(LOCAL,BASE,REMOTE)/MERGED"
+  cmd         = "nvim -d \"$LOCAL\" \"$BASE\" \"$REMOTE\" \"$MERGED\" -c 'wincmd 3l|wincmd J|norm ]c'"
+[alias]
+  ##### BASIC #####
+  alias       = !git config -l | grep alias | cut -c 7-
+  a           = add
+  aa          = add -A
+  ai          = add -i
+  ap          = add -p
+  # commit.verbose = true
+  c           = commit
+  ca          = commit --amend
+  can         = commit --amend --no-edit
+  cm          = commit -m
+  cma         = commit -am
+  b           = branch
+  ba          = branch -avv
+  bb          = "!git branch --list --sort=-committerdate | fzf --height=20% --reverse --info=inline | xargs git checkout"
+  bl          = branch --list -vv
+  bm          = branch --merged
+  bn          = branch --no-merged
+  open        = "!gh browse"
+  co          = checkout
+  cob         = checkout -b
+  d           = "!git --no-pager diff"
+  df          = diff
+  dc          = diff --cached
+  dt          = difftool
+  f           = fetch
+  m           = merge
+  mt          = mergetool
+  ls          = ls-files
+  pl          = pull
+  plr         = pull --rebase
+  ps          = push
+  psf         = push --force-with-lease
+  psF         = push --force
+  r           = rebase
+  ri          = rebase -i HEAD~10
+  rc          = rebase --continue
+  rl          = reflog
+  s           = status
+  sc          = sparse-checkout
+  sca         = sparse-checkout add
+  scs         = sparse-checkout set
+  scl         = sparse-checkout list
+  sp          = stash push --include-untracked
+  spo         = stash pop
+  st          = stash list
+  ss          = stash show --include-untracked
+  sd          = stash show --include-untracked -p
+  type        = cat-file -t
+  dump        = cat-file -p
+
+  ##### VIEW GIT LOG #####
+  # single line
+  l           = "log --pretty=format:\"%C(green)%h %C(reset)%C(dim)%<(6,trunc)%an %C(reset)%C(blue)%cd %C(reset)%s%C(auto)%d%C(reset)\" --decorate --all --date=format:\"%a %m-%d %Y %z\""
+  # single line with graph
+  lo          = "log --pretty=format:\"%C(green)%h %C(reset)%cd %C(dim)%<(6,trunc)[%an] %C(reset)%s%C(auto)%d%C(reset)\" --graph --decorate --all --date=format:\"%m-%d-%Y %H:%M\""
+  # with file status (A,M,D)
+  lf          = "log --pretty=format:\"%C(green)%h %C(blue)(%cd) %C(reset)%C(dim)%<(6,trunc)[%an] %C(reset)%s %C(auto)%d%C(reset)\"  --graph --name-status  --decorate --date=format:\"%a %m-%d-%Y %z\""
+  # detailed with graph & gpg & file change size
+  ll          = log --stat --abbrev-commit --show-signature --graph --decorate
+  lg          = "!f() { git log --pretty=format:\"%h %cd %<(6,trunc)[%cn] %s%d\" --date=relative -S'pretty' -S\"$@\" | fzf | awk '{print $1}' | xargs -I {} git diff {}^ {}; }; f"
+  # log for each commiter
+  sl          = shortlog
+  log-changed = whatchanged --graph --decorate --all
+  log-removed = log --diff-filter=D --summary --decorate --name-status
+  log-renamed = log --diff-filter=R --summary --decorate --name-status
+  log-copied  = log --diff-filter=C --summary --decorate --name-status
+
+  ##### FILTER/LIST FILES #####
+  # show files changed between commits: git ls-changed <old-commit>..<new-commit>
+  ls-chsince  = show --pretty= --name-only
+  # show files changed in HEAD
+  ls-ch       = show --pretty= --name-only HEAD
+  ls-changed  = show --pretty= --name-only HEAD
+  # List files (indexed)
+  ls-ind      = ls-tree --full-tree --name-only -r HEAD
+  ls-indexed  = ls-tree --full-tree --name-only -r HEAD
+  # List files (ignored)
+  ls-ign      = ls-files -o -i --exclude-standard
+  ls-ignored  = ls-files -o -i --exclude-standard
+  # List files (unmerged)
+  ls-unm      = ls-files -u
+  ls-unmerged = ls-files -u
+
+  ##### RESTORE ACTIONS #####
+  # uncommit previous git commit, files are still there, only HEAD and index is changed
+  # you have to stage them again in order to make newe commit
+  uncommit    = reset HEAD~1 --soft
+  # unstage specific file or all: git unstage <file>|.
+  unstage     = restore --staged
+
+  # This commits everything in my working directory
+  # and then does a hard reset to remove that commit
+  #
+  # The nice thing is, the commit is still there, but it's just unreachable.
+  # Unreachable commits are a bit inconvenient to restore,
+  # but at least they are still there.
+  # You can run the git reflog command and find the SHA
+  # of the commit if you realize later that you made
+  # a mistake with the reset. The commit message will be "WIPE SAVEPOINT" in this case.
+  wipe        = !git add -A && git commit -qm 'WIPE SAVEPOINT' && git reset HEAD~1 --hard
+[color]
+  status      = auto
+  branch      = auto
+  diff        = auto
+  interactive = auto
+  grep        = auto
+  ui          = auto
+[filter "lfs"]
+  clean       = git-lfs clean -- %f
+  smudge      = git-lfs smudge -- %f
+  process     = git-lfs filter-process
+  required    = true
+[include]
+  path        = ~/.config/git/default/.gitconfig
+[includeIf "gitdir:~/dev/"]
+  path        = ~/.config/git/dev/.gitconfig
+[includeIf "gitdir:~/work/"]
+  path        = ~/.config/git/work/.gitconfig
+[url "git@github.com:"]
+  # insteadOf   = https://github.com/
+  insteadOf   = gh:
+#[help]
+#  autocorrect = 20

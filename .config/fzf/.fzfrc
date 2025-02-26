@@ -1,0 +1,62 @@
+#!/bin/bash
+export FZF_DEFAULT_COMMAND="fdfind --hidden --type f --color=never -E '.git' -E 'node_modules' -E '*-lock.json' -E '*.lock'"
+export FZF_MOVEMENT="--bind='alt-m:toggle-preview' \
+  --bind='alt-p:preview-half-page-up' \
+  --bind='alt-n:preview-half-page-down' \
+  --bind='alt-j:half-page-down+refresh-preview' \
+  --bind='alt-k:half-page-up+refresh-preview' \
+  --bind='alt-l:kill-line' \
+  --bind='alt-g:ignore' \
+  --bind='ctrl-g:top' \
+  --bind='alt-a:toggle-all' \
+  --bind='alt-s:toggle-sort' \
+  --bind='ctrl-y:execute-silent(clip.exe <<< {})' \
+  --bind='alt-y:yank'"
+
+export FZF_DEFAULT_OPTS="$FZF_MOVEMENT \
+  --bind='ctrl-v:execute(nvim {})' \
+  --tiebreak='length,index' \
+  --preview='head -500 {}' \
+  --preview-window 'right:100:wrap:cycle:hidden' \
+  --height 40% \
+  --info='inline' \
+  --cycle \
+  --reverse \
+  --multi \
+  --ansi"
+
+# # CTRL-/ to toggle small preview window to see the full command
+# # CTRL-Y to copy the command into clipboard using windows clip.exe
+export FZF_CTRL_R_OPTS="
+  --preview 'echo {}' --preview-window up:3:hidden:wrap \
+  --bind 'ctrl-y:execute-silent(echo -n {2..} | clip.exe)+abort'"
+  # --color header:italic \
+  # --header 'Press CTRL-Y to copy command into clipboard'"
+#
+# # Preview file content using bat (https://github.com/sharkdp/bat)
+# export FZF_CTRL_T_OPTS="
+#   --walker-skip .git,node_modules,target
+#   --preview 'bat -n --color=always {}'
+#   --bind 'ctrl-/:change-preview-window(down|hidden|)'"
+#
+# export FZF_ALT_C_OMMAND="rg --hidden --files --color=never -H --glob '!{**/.git/*,**/node_modules/*,**/*-lock.json,**/*.lock}'"
+# # Print tree structure in the preview window
+# export FZF_ALT_C_OPTS="
+#   --walker-skip .git,node_modules,target
+#   --preview 'tree -C {}'"
+#         
+# if [[ -z "$DISPLAY" ]]; then
+#   FZF_DEFAULT_OPTS+="
+#     --color=info:1 \  
+#     --color=prompt:2 \
+#     --color=pointer:3 \
+#     --color=hl+:4 \
+#     --color=marker:6 \
+#     --color=spinner:7 \
+#     --color=header:8 \
+#     --color=border:9 \
+#     --color=hl:122 \
+#     --color=preview-fg:11 \
+#     --color=fg:13 \
+#     --color=fg+:14"
+#  fi
