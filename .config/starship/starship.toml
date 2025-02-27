@@ -2,8 +2,6 @@
 "$schema" = 'https://starship.rs/config-schema.json'
 
 # === customization ===
-command_timeout = 3000
-
 # Inserts a blank line between shell prompts
 add_newline = false
 
@@ -12,12 +10,11 @@ continuation_prompt = ">>"
 format = "$time $all$character"
 
 [character]
-success_symbol = '[󰍲](bold #00a4ef) [❯](bold green)'
-error_symbol = '[󰍲](bold #00a4ef) [](bold red)'
+success_symbol = '[ ](bold #E95420)[❯](bold green)'
+error_symbol = '[ ](bold #E95420)[](bold red)'
 
 [directory]
 style = "bold green"
-use_os_path_sep = false
 
 [git_branch]
 symbol = ""
@@ -39,6 +36,8 @@ behind = '[⇣${count}](yellow bold)'
 conflicted = "\u2262"
 stashed = '[${count}](yellow bold)'
 format = '([($ahead_behind )\[$all_status\]]($style) )'
+# use Windows native starship when accessing /mnt/c in Windows dirs
+windows_starship = '/mnt/c/Users/y7712/scoop/shims/starship.exe'
 
 #[git_metrics]
 #disabled = false
@@ -54,7 +53,7 @@ format = "[$ssh_symbol$hostname]($style): "
 style = "bold yellow"
 
 [username]
-format = "[$user]($style)"
+format = "[$user]($style) "
 
 # === Disables ===
 [aws]

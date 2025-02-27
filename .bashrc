@@ -24,8 +24,9 @@ HISTFILESIZE=5000
 # %T –> shows Time in the format ‘HH:MM:S’ (Hour:Minute:Seconds)
 HISTTIMEFORMAT="%F %T "
 
-# add current session command to $HISTFILE, if enabled, multiple session command will intervene with each other
-PROMPT_COMMAND="history -a; $PROMPT_COMMAND"
+# add current session command to $HISTFILE
+# if enabled, multiple session command will intervene with each other
+# PROMPT_COMMAND="history -a; $PROMPT_COMMAND"
 
 # check the window size after each command and, if necessary,
 # update the values of LINES and COLUMNS.
@@ -38,12 +39,20 @@ shopt -s cdspell
 # arguments ignore case when typing tab (already enabled)
 bind 'set completion-ignore-case on'
 
+# ctrl+x,ctrl+y to copy command line input to system clipboard
+bind '"\C-x\C-y":"\C-e\C-u /mnt/c/Windows/System32/clip.exe<<"EOF"\n\C-y\nEOF\n"'
+
 # If set, the pattern "**" used in a pathname expansion context will
 # match all files and zero or more directories and subdirectories.
 #shopt -s globstar
 
-# colored GCC warnings and errors
-#export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
+# make less more friendly for non-text input files, see lesspipe(1)
+if [[ -x /usr/bin/lesspipe ]]; then eval "$(SHELL=/bin/sh lesspipe)"; fi
+
+# set variable identifying the chroot you work in (used in the prompt below)
+if [[ -z "${debian_chroot:-}" && -r /etc/debian_chroot ]]; then
+  debian_chroot=$(cat /etc/debian_chroot)
+fi
 
 # enable color support of ls and also add handy aliases
 if [[ -x /usr/bin/dircolors ]]; then
@@ -53,13 +62,16 @@ if [[ -x /usr/bin/dircolors ]]; then
     eval "$(dircolors -b)"
   fi
   alias ls='ls -F --color=auto --show-control-chars'
-  #alias vdir='vdir --color=auto'
   #alias dir='dir --color=auto'
+  #alias vdir='vdir --color=auto'
 
   alias grep='grep --color=auto'
   alias fgrep='fgrep --color=auto'
   alias egrep='egrep --color=auto'
 fi
+
+# colored GCC warnings and errors
+#export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
 
 # Alias definitions.
 # You may want to put all your additions into a separate file like
@@ -72,14 +84,13 @@ fi
 # enable programmable completion features (you don't need to enable
 # this, if it's already enabled in /etc/bash.bashrc and /etc/profile
 # sources /etc/bash.bashrc).
-# if ! shopt -oq posix; then
-#   if [ -f /usr/share/bash-completion/bash_completion ]; then
-#     . /usr/share/bash-completion/bash_completion
-#   elif [ -f /etc/bash_completion ]; then
-#     . /etc/bash_completion
-#   fi
-# fi
-# export PATH=$PATH:$HOME/.local/bin
+if ! shopt -oq posix; then
+  if [[ -s /usr/share/bash-completion/bash_completion ]]; then
+    source /usr/share/bash-completion/bash_completion
+  elif [[ -s /etc/bash_completion ]]; then
+    source /etc/bash_completion
+  fi
+fi
 
 # === STARSHIP ===
 function set_win_title() {
@@ -91,24 +102,20 @@ function set_win_title() {
   fi
   echo -ne "\033]0; ${win_title} \007"
   # enable windows terminal duplicate pane or tab
-  PROMPT_COMMAND=${PROMPT_COMMAND:+"$PROMPT_COMMAND "}'printf "\e]9;9;%s\e\\" "`cygpath -w "$PWD"`"'
+  # PROMPT_COMMAND=${PROMPT_COMMAND:+"$PROMPT_COMMAND "}'printf "\e]9;9;%s\e\\" "`wslpath -w "$PWD"`"'
 }
 # shellcheck disable=SC2034
 starship_precmd_user_func="set_win_title"
-export STARSHIP_CONFIG="$HOME/.config/starship/gitbash_starship.toml"
+export STARSHIP_CONFIG="$HOME/.config/starship/starship.toml"
 eval "$(starship init bash)"
 
-# git bash flikers in windows terminal:
-# https://github.com/microsoft/terminal/issues/7200
-bind 'set bell-style audible'
-
 # === FZF ===
-#[ -s ~/.fzf.bash ] && source ~/.fzf.bash
-if [[ -s "$HOME/.config/fzf/key-bindings.bash" ]]; then
-  source "$HOME/.config/fzf/key-bindings.bash"
+# if [[ -s ~/.fzf.bash ]]; then source ~/.fzf.bash; fi
+if [[ -s /usr/share/doc/fzf/examples/key-bindings.bash ]]; then
+  source /usr/share/doc/fzf/examples/key-bindings.bash
 fi
-if [[ -s "$HOME/.config/fzf/completions.bash" ]]; then
-  source "$HOME/.config/fzf/completions.bash"
+if [[ -s /usr/share/bash-completion/completions/fzf ]]; then
+  source /usr/share/bash-completion/completions/fzf
 fi
 if [[ -s ~/.config/fzf/.fzfrc ]]; then
   source ~/.config/fzf/.fzfrc
@@ -147,7 +154,8 @@ if [[ -s ~/.config/z/z.sh ]]; then
 fi
 
 # === EDITOR ===
-# ctrl+x ctrl+e opens a text editor in which you can edit the current command. Emacs by default, change the default to nvim
+# ctrl+x ctrl+e opens a text editor in which you can edit the current command.
+# Emacs by default, change the default to nvim
 export EDITOR=nvim
 
 # === REPL LOG ===
@@ -156,12 +164,20 @@ export NODE_REPL_HISTORY=''
 # suppress python repl history file write
 export PYTHONSTARTUP="$HOME/.config/python/.pythonrc"
 
-# === NPM ===
-export npm_config_userconfig="$HOME"/.config/npm/.npmrc
+# === terraform ===
+complete -C /usr/bin/terraform terraform
 
-# === NVIM CONFIG ===
-# set $XDG_CONFIG_HOME to $HOME/.config for portable neovim config (now, set system env globally in Windows)
-# export XDG_CONFIG_HOME="$HOME/.config"
+# === NVM ===
+export NVM_DIR="$HOME/.local/share/nvm"
+if [[ -s "$NVM_DIR/nvm.sh" ]]; then
+  source "$NVM_DIR/nvm.sh" # This loads nvm
+fi
+if [[ -s "$NVM_DIR/bash_completion" ]]; then
+  source "$NVM_DIR/bash_completion" # This loads nvm bash_completion
+fi
+
+# === NPM ===
+export npm_config_userconfig="$HOME/.config/npm/.npmrc"
 
 # === GPG ===
 # enable-ssh-support
@@ -173,35 +189,3 @@ fi
 GPG_TTY=$(tty)
 export GPG_TTY
 # gpg-connect-agent updatestartuptty /bye >/dev/null
-
-# === SSH ===
-# do not use agent, manually enter passphrase instead
-# https://docs.github.com/en/authentication/connecting-to-github-with-ssh/working-with-ssh-key-passphrases#auto-launching-ssh-agent-on-git-for-windows
-# ssh_agent_env=~/.ssh/agent.env
-#
-# agent_load_env() { test -f "$ssh_agent_env" && . "$ssh_agent_env" >|/dev/null; }
-#
-# agent_start() {
-#   (
-#     umask 077
-#     ssh-agent >|"$ssh_agent_env"
-#   )
-#   . "$ssh_agent_env" >|/dev/null
-# }
-#
-# agent_load_env
-#
-# # agent_run_state: 0=agent running w/ key; 1=agent w/o key; 2=agent not running
-# agent_run_state=$(
-#   ssh-add -l >|/dev/null 2>&1
-#   echo $?
-# )
-#
-# if [ ! "$SSH_AUTH_SOCK" ] || [ "$agent_run_state" = 2 ]; then
-#   agent_start
-#   ssh-add
-# elif [ "$SSH_AUTH_SOCK" ] && [ "$agent_run_state" = 1 ]; then
-#   ssh-add
-# fi
-#
-# unset ssh_agent_env

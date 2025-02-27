@@ -1,6 +1,6 @@
 <!-- markdownlint-disable MD013 -->
 
-# Public Dotfiles (Windows)
+# Dotfiles for Linux/WSL
 
 ## Create a new bare repository to track dotfiles in local system
 
@@ -25,16 +25,6 @@ config push -u origin main
 
 ## Clone dotfiles from remote repository to new PC or system
 
-### 0. Install `Git-Bash` by `scoop`
-
-```powershell
-# run in Windows PowerShell or pwsh
-Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
-Invoke-RestMethod -Uri https://get.scoop.sh | Invoke-Expression
-scoop install git
-git-bash
-```
-
 ### 1. Clone as a bare repo
 
 ```bash
@@ -49,12 +39,12 @@ cd $HOME; git clone --bare <remote-repo-url> $HOME/.dotfiles-public
 > - generate a new ssh key and add it to github account
 > - clone by `https`
 
-### 2. **CHECKOUT** the actual content from the bare repository to your `$HOME`
+### 2. *CHECKOUT* the actual content from the bare repository to your `$HOME`
 
 ```bash
 alias config='git --git-dir=$HOME/.dotfiles-public/ --work-tree=$HOME';
 # WARN: the following command WITHOUT branch name will checkout the default branch
-config checkout # or `config checkout <os-branch>`
+config checkout linux # checkout this branch, not the main
 # do not show unrelevant files in `git status`
 config config --local status.showUntrackedFiles no
 ```
@@ -79,7 +69,7 @@ config config --local status.showUntrackedFiles no
 > config checkout 2>&1 | head -n -2 | tail -n +2 | awk {'print $1'} | xargs -I{} bash -c 'mkdir -p $HOME/.dotfiles-backup/$(dirname {}) && mv -nv {} $HOME/.dotfiles-backup/{}'
 > # Re-run the check out if your previous checkout failed
 > # WARN: the following command WITHOUT branch name will checkout the default branch
-> config checkout # or `config checkout <os-branch>`
+> config checkout linux # checkout this branch, not the main
 > # do not show unrelevant files in `git status`
 > config config --local status.showUntrackedFiles no
 > ```
@@ -97,33 +87,6 @@ git submodule update --init --recursive
 # update submodules to latest
 config submodule update --init --recursive --remote
 ```
-
-### 4. Post installation
-
-- After dotfiles are checkout to new system, run `scoop install ...`
-
-## System Settings (Windows)
-
-### Performance
-
-- `Win+I` => System => Display => Turn off `Show animations in Windows`
-- `Win+S` and typing keyboard for keyboard panel, change the following settings
-  - keyboard repeat key delay: short
-  - keyboard repeat key rate: fast
-
-### Security
-
-- `Win+I` => Devices => Autoplay => Turn off `Autoplay`, set `Removable drive`
-and `Memory card` to `Take no action` or `Ask me every time`
-
-### Third party
-
-- `Win+S`
-  - Set user environment variable `$XDG_CONFIG_HOME=$USERPROFILE/.config` for neovim configuration path
-  - Set user environment variable `$WSLENV=USERPROFILE/p:` to let WSL access Windows host `$USERPROFILE` env
-
-- Chrome: disable [smooth-scrolling](chrome://flags/#smooth-scrolling)
-  - this prevents Vimium to scroll slowly in search using `n` or `N`
 
 ## Generate SSH key
 
@@ -207,144 +170,147 @@ gpg --edit-key KEYID # HJ6582DC8B78GTU in this case
 gpg --armor --export KEYID
 ```
 
-## Tools
+## System settings (WSL)
 
-## Package Managers
-
-- Winget (native package manager)
-- Scoop (no UAC popup)
-
-## Fonts
-
-- [FiraCode NF](https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/FiraCode)
-- [Comic Shanns Mono](https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/ComicShannsMono)
+- remove `snap`
+  - [instructions](https://www.debugpoint.com/remove-snap-ubuntu/)
+  - `sudo apt-mark hold snapd` [reference](https://askubuntu.com/questions/1345385/how-can-i-stop-apt-from-installing-snap-packages)
 
 ```bash
-# download .tar.xz (requires xz)
-FONT_FILE="FiraCode.tar.xz"
-# FONT_FILE="ComicShannsMono.tar.xz"
-curl -LO "https://github.com/ryanoasis/nerd-fonts/releases/latest/download/$FONT_FILE"
-tar -xvJf "./$FONT_FILE"
-
-# or download .zip (requires unzip)
-FONT_FILE="FiraCode.zip"
-# FONT_FILE="ComicShannsMono.zip"
-curl -LO "https://github.com/ryanoasis/nerd-fonts/releases/latest/download/$FONT_FILE"
-tar -xvzf "./$FONT_FILE" # requires unzip
+# remove package cleanly
+sudo apt remove --purge PACKAGE_NAME
+sudo apt autoremove --purge
+# remove configuration files of packages that were already removed
+# WARN: check first
+dpkg -l | grep '^rc' | awk '{print $2}' | sudo xargs dpkg --purge
 ```
 
-## Scoop apps
+- enable `systemd` in file `/etc/wsl.conf`
 
 ```txt
-git
-pwsh
-starship
-extras/windows-terminal
-versions/windows-terminal-preview
-fd
-ripgrep
-gcc
-pyenv
-make
-neovim
-fzf
-kanata
-extras/glazewm
-
-delta
-nvm
-cmake
-gh
-gitui
-wget
-7zip
-hyperfine
-tree-sitter
-extras/keyviz
-extras/obs-studio
-extras/musicplayer2
+[boot]
+systemd=true
+cmd="mount --make-rshared /"
+# disable append windows $PATH
+[interop]
+appendWindowsPath=false
+# disable WSL auto generates `/etc/resolv.conf` if you choose to use your own DNS lookup
+# [network]
+# generateResolvConf=false
 ```
 
-### Shell related
+- change DNS lookup that generated by WSL to your choice in `/etc/resolv.conf`
 
-- `pwsh` (by winget or Microsoft Store)
-  - `z`, `PSReadLine`
-
-```pwsh
-# run in pwsh, not Windows PowerShell
-Install-Module -Name z
-Install-Module PSReadLine # may be already installed natively 
-# pre-release
-# Install-Module PSReadLine -AllowPrerelease -Force
+```txt
+nameserver = 1.1.1.1
 ```
 
-- terminal recorders:
-  - `yarn global add terminalizer`
-  - `asciinema`
-  - `vhs`
-
-### Editors
-
-- `extras/vscode`
-  - keymap, settings.json, extensions, snippets
-- `neovim`
-
-### Languages
-
-- nodejs: `nvm` (node version manager)
-- python: `miniconda` or `pyenv` (python version manager)
-- cpp/c: `gcc`/`clang` (for neovim TreeSitter), `cmake`, `gdb`
-
-## GUIs
-
-### Browsers
-
-- Chrome/Firefox with plugins:
-  - `Vimium`
-    - [remove global mark](https://github.com/philc/vimium/issues/3181#issuecomment-1013613015)
-  - uBlock origin
-  - react dev tools
-  - storage area explorer
-
-### DEV tools
-
-- `versions/windows-terminal-preview` (or from Microsoft Store)
-  - `extras/wezterm`
-  - `extras/alacritty`
-- `extras/postman`
-- Podman in WSL (alternatives to docker), kubernetes
-- VirtualBox, VM, qemu
-- Wireshark, Pingplotter
-- PowerToys Preview
-  - key mappings
+- Fixes
+  - use `dmesg` to show startup profile
+  - some possible [fixes](https://github.com/arkane-systems/genie/wiki/Systemd-units-known-to-be-problematic-under-WSL)
+  - `systemctl status -l systemd-remount-fs.service` examine status -> `sudo e2label /dev/sdb cloudimg-rootfs` or delete the line for `/` from `/etc/fstab` entirely
+  - `multipathd.service` -> either use `systemctl` to turn off or mask `multipathd.service`
+  - `$XDG_RUNTIME_DIR` not user accessible [issue](https://github.com/microsoft/WSL/issues/10846)
+    - `/run/user/1000` owned by `root` => solved by `sudo chown $USER:usergroup /run/user/1000` where `usergroup` can be found by `id -gn`
+- Harmless
+  - [Failed to connect to bus: No such file or directory](https://github.com/microsoft/WSL/issues/2941)
+  - `PCI: Fatal: No config space access function found`
+  - `kvm: no hardware support`
 
 ### Misc
 
-- Kit [github](https://github.com/johnlindquist/kit)
-- GIMP: image manipulation program
-- audacity: audio editor
-- `extras/keyviz` / `extras/carnac`: show keystoke on screen
-- Sigil: epub/ebook editor
+- disable `~/.sudo_as_admin_successful`
+
+```config
+# https://github.com/sudo-project/sudo/issues/56#issuecomment-984925944
+# /etc/sudoers.d/local_config
+# Disable ~/.sudo_as_admin_successful file
+Defaults !admin_flag
+```
+
+- disable `sudo` message on startup
+
+```bash
+# https://askubuntu.com/a/22646
+sudo vim /etc/bash.bashrc
+```
+
+Then comment out the following lines in `/etc/bash.bashrc`:
+
+```bash
+# sudo hint
+# if [ ! -e "$HOME/.sudo_as_admin_successful" ]; then
+#     case " $(groups) " in *\ admin\ *)
+#     if [ -x /usr/bin/sudo ]; then
+#     cat <<-EOF
+#     To run a command as administrator (user "root"), use "sudo <command>".
+#     See "man sudo_root" for details.
+#    
+#     EOF
+#     fi
+#     esac
+# fi
+```
+
+### Tools
+
+- gcc, rust, gdb, cmake, go
+- tree
+- hyperfine
+- kanata
+- neovim: need xclip or `:h clipboard-wsl` or [this](https://mitchellt.com/2022/05/15/WSL-Neovim-Lua-and-the-Windows-Clipboard.html)
+  - `Telescope`: `ripgrep`, `fd-find`
+  - `unzip` for `mason.nvim`
+  - `sshfs` for remote
+- git, gh, gitui/lazygit, delta
+- zsh, starship, tmux, fzf
+- nvm (node version manager)
+- pyenv (python version manager)
+- Container: podman (buildah, runC), skopeo
+  - podman [warnings](https://github.com/containers/podman/issues/12983)
+- Devop: terraform
+- terminal recorders: terminizer, asciinema, vhs
+
+- screenkey
+- obs studio
+- gimp
+- audacity
 - video editor?
-- Obsidian: note taking (markdown)
-  - keymaps, settings, appearance
-- ShellExView (NirSoft): fix file explorer right click hanging issues
 
-# Shrink WSL2 Virtual Disk
+## Some manual installed packages
 
-```powershell
-# shutdown all wsl instances
-wsl --shutdown
-
-# open window Diskpart
-diskpart
-
-# fill with path to file `ext4.vhdx`, for example
-select vdisk file="$YOUR_HOME\AppData\Local\Packages\CanonicalGroupLimited.Ubuntu22.04LTS_79rhkp1fndgsc\LocalState\ext4.vhdx"
-
-attach vdisk readonly
-compact vdisk
-detach vdisk
-
-exit
+```txt
+unzip
+wslu
+ripgrep
+base-files
+base-passwd
+bash
+bsdutils
+build-essential
+cmake
+dash
+diffutils
+fd-find
+findutils
+gdb
+gh
+grep
+gzip
+hostname
+hyperfine
+init
+libdebconfclient0
+libfuse2 # for neovim if necessary
+login
+ncurses-base
+ncurses-bin
+podman
+sshfs
+sysvinit-utils
+terraform
+tree
+ubuntu-minimal
+ubuntu-standard
+ubuntu-wsl
 ```

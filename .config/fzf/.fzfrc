@@ -10,7 +10,7 @@ export FZF_MOVEMENT="--bind='alt-m:toggle-preview' \
   --bind='ctrl-g:top' \
   --bind='alt-a:toggle-all' \
   --bind='alt-s:toggle-sort' \
-  --bind='ctrl-y:execute-silent(clip.exe <<< {})' \
+  --bind='ctrl-y:execute-silent(/mnt/c/Windows/System32/clip.exe <<< {})' \
   --bind='alt-y:yank'"
 
 export FZF_DEFAULT_OPTS="$FZF_MOVEMENT \
@@ -29,25 +29,25 @@ export FZF_DEFAULT_OPTS="$FZF_MOVEMENT \
 # # CTRL-Y to copy the command into clipboard using windows clip.exe
 export FZF_CTRL_R_OPTS="
   --preview 'echo {}' --preview-window up:3:hidden:wrap \
-  --bind 'ctrl-y:execute-silent(echo -n {2..} | clip.exe)+abort'"
-  # --color header:italic \
-  # --header 'Press CTRL-Y to copy command into clipboard'"
-#
+  --bind 'ctrl-y:execute-silent(echo -n {2..} | /mnt/c/Windows/System32/clip.exe)+abort' \
+  --color header:italic \
+  --header 'Press CTRL-Y to copy command into clipboard'"
+
 # # Preview file content using bat (https://github.com/sharkdp/bat)
 # export FZF_CTRL_T_OPTS="
 #   --walker-skip .git,node_modules,target
 #   --preview 'bat -n --color=always {}'
 #   --bind 'ctrl-/:change-preview-window(down|hidden|)'"
 #
-# export FZF_ALT_C_OMMAND="rg --hidden --files --color=never -H --glob '!{**/.git/*,**/node_modules/*,**/*-lock.json,**/*.lock}'"
+# export FZF_ALT_C_COMMAND="rg --hidden --files --color=never -H --glob '!{**/.git/*,**/node_modules/*,**/*-lock.json,**/*.lock}'"
 # # Print tree structure in the preview window
 # export FZF_ALT_C_OPTS="
 #   --walker-skip .git,node_modules,target
 #   --preview 'tree -C {}'"
-#         
+#
 # if [[ -z "$DISPLAY" ]]; then
 #   FZF_DEFAULT_OPTS+="
-#     --color=info:1 \  
+#     --color=info:1 \
 #     --color=prompt:2 \
 #     --color=pointer:3 \
 #     --color=hl+:4 \
