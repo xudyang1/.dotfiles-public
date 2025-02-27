@@ -1,0 +1,27 @@
+# What protocol to use when performing git operations. Supported values: ssh, https
+git_protocol: ssh
+# What editor gh should run when creating issues, pull requests, etc. If blank, will refer to environment.
+editor: nvim
+# When to interactively prompt. This is a global config that cannot be overridden by hostname. Supported values: enabled, disabled
+prompt: enabled
+# A pager program to send command output to, e.g. "less". Set the value to "cat" to disable the pager.
+pager: delta
+# Aliases allow you to create nicknames for gh commands
+aliases:
+  # TODO: integrate with fzf
+  bugs: issue list --label=bugs
+  prd: pr diff
+  prv: pr view
+  prw: pr view -w
+  co: pr checkout
+  ame: issue list --assignee @me
+  ime: issue list --mention @me
+  iv: issue view --comments
+  clone: '!gh repo clone "$1" "$2" -- --filter=blob:none'
+  fork: '!gh repo fork --clone --default-branch-only "$1" -- --filter=blob:none'
+  igrep: '!gh issue list --label="$1" | grep -i $2'
+# The path to a unix socket through which send HTTP connections. If blank, HTTP traffic will be handled by net/http.DefaultTransport.
+http_unix_socket:
+# What web browser gh should use when opening URLs. If blank, will refer to environment.
+browser:
+version: "1"
