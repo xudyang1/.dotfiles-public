@@ -101,6 +101,13 @@ config submodule update --init --recursive --remote
 ### 4. Post installation
 
 - After dotfiles are checkout to new system, run `scoop install ...`
+- Copy Windows Terminal `settings.json` to portable Windows Terminal settings directory:
+
+```bash
+cp ~/.config/wt/settings.json ~/scoop/apps/windows-terminal/settings/settings.json
+```
+
+- Check `pwsh` `$PROFILE` file can be read successfully
 
 ## System Settings (Windows)
 
