@@ -21,6 +21,9 @@ pref("sidebar.position_start", true);
 // sidebar additional tools
 pref("sidebar.main.tools", "aichat,syncedtabs,history,bookmarks");
 
+// prevent showing top bar when pressing alt key
+pref("ui.key.menuAccessKeyFocuses", false);
+
 // disable full screen animation
 pref("full-screen-api.transition-duration.enter", "0 0");
 pref("full-screen-api.transition-duration.leave", "0 0");
