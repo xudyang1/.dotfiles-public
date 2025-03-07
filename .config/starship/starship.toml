@@ -10,11 +10,46 @@ continuation_prompt = ">>"
 format = "$time $all$character"
 
 [character]
+# ubuntu
 success_symbol = '[ ](bold #E95420)[❯](bold green)'
 error_symbol = '[ ](bold #E95420)[](bold red)'
 
+# arch
+# success_symbol = '[ ](bold #1793D1)[❯](bold green)'
+# error_symbol = '[ ](bold #1793D1)[](bold red)'
+
+# kali
+# success_symbol = '[ ](bold #33627E)[❯](bold green)'
+# error_symbol = '[ ](bold #33627E)[](bold red)'
+
+# debian
+# success_symbol = '[ ](bold #D70A53)[❯](bold green)'
+# error_symbol = '[ ](bold #D70A53)[](bold red)'
+
+# mint
+# success_symbol = '[󰣭 ](bold #86BE43)[❯](bold green)'
+# error_symbol = '[󰣭 ](bold #86BE43)[](bold red)'
+
+# linux
+# success_symbol = '[ ](bold #77216F)[❯](bold green)'
+# error_symbol = '[ ](bold #77216F)[](bold red)'
+
+# windows
+# success_symbol = '[󰍲](bold #00A4EF) [❯](bold green)'
+# error_symbol = '[󰍲](bold #00A4EF) [](bold red)'
+
+# git bash
+# success_symbol = '[ ](bold #F14E32)[❯](bold green)'
+# error_symbol = '[ ](bold #F14E32)[](bold red)'
+
+# apple
+# success_symbol = '[ ](bold #A2AAAD)[❯](bold green)'
+# error_symbol = '[ ](bold #A2AAAD)[](bold red)'
+
 [directory]
 style = "bold green"
+# Windows: always use `/`
+use_os_path_sep = false
 
 [git_branch]
 symbol = ""
@@ -36,8 +71,6 @@ behind = '[⇣${count}](yellow bold)'
 conflicted = "\u2262"
 stashed = '[${count}](yellow bold)'
 format = '([($ahead_behind )\[$all_status\]]($style) )'
-# use Windows native starship when accessing /mnt/c in Windows dirs
-windows_starship = '/mnt/c/Users/y7712/scoop/shims/starship.exe'
 
 #[git_metrics]
 #disabled = false
