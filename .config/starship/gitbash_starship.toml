@@ -27,8 +27,8 @@ format = "$time $all$character"
 # error_symbol = '[ ](bold #D70A53)[](bold red)'
 
 # mint
-# success_symbol = '[ ](bold #86BE43)[❯](bold green)'
-# error_symbol = '[ ](bold #86BE43)[](bold red)'
+# success_symbol = '[󰣭 ](bold #86BE43)[❯](bold green)'
+# error_symbol = '[󰣭 ](bold #86BE43)[](bold red)'
 
 # linux
 # success_symbol = '[ ](bold #77216F)[❯](bold green)'
