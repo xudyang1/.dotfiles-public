@@ -1,22 +1,54 @@
 # Get editor completions based on the config schema
 "$schema" = 'https://starship.rs/config-schema.json'
-# local copy
-# "$schema" = "$HOME\\.config\\starship\\starship-theme-schema.json"
 
+# === customization ===
 # Inserts a blank line between shell prompts
 add_newline = false
 
-# === customization ===
 continuation_prompt = ">>"
 
 format = "$time $all$character"
 
 [character]
-success_symbol = '[ ](bold #f14e32)[❯](bold green)'
-error_symbol = '[ ](bold #f14e32)[](bold red)'
+# ubuntu
+# success_symbol = '[ ](bold #E95420)[❯](bold green)'
+# error_symbol = '[ ](bold #E95420)[](bold red)'
+
+# arch
+# success_symbol = '[ ](bold #1793D1)[❯](bold green)'
+# error_symbol = '[ ](bold #1793D1)[](bold red)'
+
+# kali
+# success_symbol = '[ ](bold #33627E)[❯](bold green)'
+# error_symbol = '[ ](bold #33627E)[](bold red)'
+
+# debian
+# success_symbol = '[ ](bold #D70A53)[❯](bold green)'
+# error_symbol = '[ ](bold #D70A53)[](bold red)'
+
+# mint
+# success_symbol = '[ ](bold #86BE43)[❯](bold green)'
+# error_symbol = '[ ](bold #86BE43)[](bold red)'
+
+# linux
+# success_symbol = '[ ](bold #77216F)[❯](bold green)'
+# error_symbol = '[ ](bold #77216F)[](bold red)'
+
+# windows
+# success_symbol = '[󰍲](bold #00A4EF) [❯](bold green)'
+# error_symbol = '[󰍲](bold #00A4EF) [](bold red)'
+
+# git bash
+success_symbol = '[ ](bold #F14E32)[❯](bold green)'
+error_symbol = '[ ](bold #F14E32)[](bold red)'
+
+# apple
+# success_symbol = '[ ](bold #A2AAAD)[❯](bold green)'
+# error_symbol = '[ ](bold #A2AAAD)[](bold red)'
 
 [directory]
 style = "bold green"
+# Windows: always use `/`
 use_os_path_sep = false
 
 [git_branch]
@@ -54,7 +86,7 @@ format = "[$ssh_symbol$hostname]($style): "
 style = "bold yellow"
 
 [username]
-format = "[$user]($style)"
+format = "[$user]($style) "
 
 # === Disables ===
 [aws]
