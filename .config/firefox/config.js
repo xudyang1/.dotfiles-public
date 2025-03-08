@@ -1,6 +1,7 @@
 // IMPORTANT: Start your code on the 2nd line.
 // This file should be placed at the top level of firefox directory (directory that contains firefox executable)
 //   - Windows: 'C:/Program Files/Mozilla Firefox/config.js'
+//   - Linux: '/etc/firefox/config.js'
 // @link: https://support.mozilla.org/en-US/kb/customizing-firefox-using-autoconfig
 // @link: https://superuser.com/questions/1271147/change-key-bindings-keyboard-shortcuts-in-firefox-57/1785959#1785959
 // @link: https://support.mozilla.org/en-US/questions/1367908
@@ -15,9 +16,10 @@ try {
   const Services =
     globalThis.Services ||
     ChromeUtils.import("resource://gre/modules/Services.jsm").Services;
-  const { SessionStore } = Components.utils.import(
-    "resource:///modules/sessionstore/SessionStore.jsm",
-  );
+  // TODO: TypeError: Components.utils.import is not a function
+  // const { SessionStore } = Components.utils.import(
+  //   "resource:///modules/sessionstore/SessionStore.jsm",
+  // );
   function ConfigJS() {
     Services.obs.addObserver(this, "chrome-document-global-created", false);
   }
@@ -85,8 +87,9 @@ try {
   Services.prompt.alert(
     null,
     "AutoConfig",
-    "Please check autoconfig file: %Mozilla Firefox%/config.js",
+    "Exception caught. Please check autoconfig file: %Mozilla Firefox%/config.js.",
   );
+  Services.prompt.alert(null, "AutoConfig", ex);
   // To see error, go to about:config enable
   //   - devtools.debugger.remote-enabled
   //   - devtools.chrome.enabled
