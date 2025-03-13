@@ -132,6 +132,10 @@
   st          = stash list
   ss          = stash show --include-untracked
   sd          = stash show --include-untracked -p
+  wt          = worktree
+  wta         = worktree add
+  wtl         = worktree list
+  wtr         = worktree remove
   type        = cat-file -t
   dump        = cat-file -p
 
