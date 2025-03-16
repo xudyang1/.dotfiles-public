@@ -12,6 +12,8 @@ try {
 
   // == Custom ===
   // TODO: not being set
+  // view pdf in firefox when clicking `Open in firefox`
+  pref("browser.download.open_pdf_attachments_inline", true);
   // enable tab groups
   pref("browser.tabs.groups.enabled", true);
   // vertical tab bar
