@@ -11,9 +11,10 @@ try {
   pref("browser.aboutConfig.showWarning", false);
 
   // == Custom ===
-  // TODO: not being set
   // view pdf in firefox when clicking `Open in firefox`
   pref("browser.download.open_pdf_attachments_inline", true);
+
+  // TODO: not being set
   // enable tab groups
   pref("browser.tabs.groups.enabled", true);
   // vertical tab bar
@@ -23,6 +24,8 @@ try {
   pref("sidebar.position_start", true);
   // sidebar additional tools
   pref("sidebar.main.tools", "aichat,syncedtabs,history,bookmarks");
+  // hide sidebar initially
+  pref("sidebar.visibility", "hide-sidebar");
 
   // prevent showing top bar when pressing alt key
   pref("ui.key.menuAccessKeyFocuses", false);
