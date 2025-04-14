@@ -1,14 +1,13 @@
 <!-- markdownlint-disable MD013 -->
 
-# Dotfiles for Linux/WSL
+# Public Dotfiles for Linux/WSL
 
-## Create a new bare repository to track dotfiles in local system
+## To track dotfiles in current Linux/WSL system
 
 ```bash
-cd $HOME
 # create bare repo at `$HOME` directory
-git init --bare $HOME/.dotfiles-public
-# set alias
+cd $HOME && git init --bare $HOME/.dotfiles-public
+# create alias for convenience
 alias config='git --git-dir=$HOME/.dotfiles-public/ --work-tree=$HOME'
 # make alias available in `.bashrc`
 echo "alias config='git --git-dir=$HOME/.dotfiles-public/ --work-tree=$HOME'" >> $HOME/.bashrc
@@ -19,11 +18,11 @@ config config --local status.showUntrackedFiles no
 config status
 config add .vimrc
 config commit -m "Add .vimrc"
-config remote add origin GIT_REPO
+config remote add origin REMOTE_REPOSITORY_URL
 config push -u origin main
 ```
 
-## Clone dotfiles from remote repository to new PC or system
+## To clone dotfiles repository to a new Linux/WSL system
 
 ### 1. Clone as a bare repo
 
@@ -33,25 +32,25 @@ cd $HOME; git clone --bare <remote-repo-url> $HOME/.dotfiles-public
 ```
 
 > [!NOTE]
-> Permission denied error may occur when cloning a private repo or when cloning
-> by ssh, you can either:
+> Permission denied error may occur when cloning a repository that requires ssh
+> key athentication, you can either:
 >
-> - generate a new ssh key and add it to github account
-> - clone by `https`
+> - generate a new ssh key and upload it to the github account
+> - use a public dotfile repository and clone it by `https`
 
 ### 2. *CHECKOUT* the actual content from the bare repository to your `$HOME`
 
 ```bash
 alias config='git --git-dir=$HOME/.dotfiles-public/ --work-tree=$HOME';
-# WARN: the following command WITHOUT branch name will checkout the default branch
-config checkout linux # checkout this branch, not the main
 # do not show unrelevant files in `git status`
 config config --local status.showUntrackedFiles no
+# WARN: WITHOUT a branch name, default branch is checked out
+config checkout <os-branch>
 ```
 
 > [!NOTE]
 >
-> - Git may prevent you overwrite files that already present in current system:
+> - Git will prevent you overwrite files that already present in current system:
 >
 > ```txt
 > error: The following untracked working tree files would be overwritten by checkout:
@@ -64,26 +63,25 @@ config config --local status.showUntrackedFiles no
 > - try back up the files or remove them:
 >
 > ```bash
-> # move existing dotfiles into `$HOME/.dotfiles-backup/`
 > # WARN: should always check the output from awk first!!!
-> config checkout 2>&1 | head -n -2 | tail -n +2 | awk {'print $1'} | xargs -I{} bash -c 'mkdir -p $HOME/.dotfiles-backup/$(dirname {}) && mv -nv {} $HOME/.dotfiles-backup/{}'
+> config checkout 2>&1 | head -n -2 | tail -n +2 | awk '{print $1}';
+> # move existing dotfiles into `$HOME/.dotfiles-public-backup/`
+> config checkout 2>&1 | head -n -2 | tail -n +2 | awk '{print $1}' | xargs -I{} bash -c "mkdir -p $HOME/.dotfiles-public-backup/\$(dirname {}) && mv -nv {} $HOME/.dotfiles-public-backup/{}";
 > # Re-run the check out if your previous checkout failed
-> # WARN: the following command WITHOUT branch name will checkout the default branch
-> config checkout linux # checkout this branch, not the main
-> # do not show unrelevant files in `git status`
-> config config --local status.showUntrackedFiles no
+> # WARN: WITHOUT a branch name, default branch is checked out
+> config checkout <os-branch>
 > ```
 
 ### 3. Clone submodules in dotfiles
 
 > [!TIP]
-> Submodules may help tracking tightly coupled files
+> Submodules can help tracking tightly coupled files
 >
 > - [make a tracked directory to git submodule](https://stackoverflow.com/questions/36386667/how-to-make-an-existing-directory-within-a-git-repository-a-git-submodule)
 
 ```bash
 # update submodules to tracked commits
-git submodule update --init --recursive
+config submodule update --init --recursive
 # update submodules to latest
 config submodule update --init --recursive --remote
 ```
@@ -168,6 +166,25 @@ gpg --edit-key KEYID # HJ6582DC8B78GTU in this case
 
 # upload to github
 gpg --armor --export KEYID
+```
+
+## Fonts
+
+- [FiraCode NF](https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/FiraCode)
+- [Comic Shanns Mono](https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/ComicShannsMono)
+
+```bash
+# download .tar.xz (requires xz)
+FONT_FILE="FiraCode.tar.xz"
+# FONT_FILE="ComicShannsMono.tar.xz"
+curl -LO "https://github.com/ryanoasis/nerd-fonts/releases/latest/download/$FONT_FILE"
+tar -xvJf "./$FONT_FILE"
+
+# or download .zip (requires unzip)
+FONT_FILE="FiraCode.zip"
+# FONT_FILE="ComicShannsMono.zip"
+curl -LO "https://github.com/ryanoasis/nerd-fonts/releases/latest/download/$FONT_FILE"
+tar -xvzf "./$FONT_FILE" # requires unzip
 ```
 
 ## System settings (WSL)
