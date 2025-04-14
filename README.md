@@ -2,13 +2,12 @@
 
 # Public Dotfiles (Windows)
 
-## Create a new bare repository to track dotfiles in local system
+## To track dotfiles in current Windows system
 
 ```bash
-cd $HOME
 # create bare repo at `$HOME` directory
-git init --bare $HOME/.dotfiles-public
-# set alias
+cd $HOME && git init --bare $HOME/.dotfiles-public
+# create alias for convenience
 alias config='git --git-dir=$HOME/.dotfiles-public/ --work-tree=$HOME'
 # make alias available in `.bashrc`
 echo "alias config='git --git-dir=$HOME/.dotfiles-public/ --work-tree=$HOME'" >> $HOME/.bashrc
@@ -19,21 +18,26 @@ config config --local status.showUntrackedFiles no
 config status
 config add .vimrc
 config commit -m "Add .vimrc"
-config remote add origin GIT_REPO
+config remote add origin REMOTE_REPOSITORY_URL
 config push -u origin main
 ```
 
-## Clone dotfiles from remote repository to new PC or system
+## To clone dotfiles repository to a new Windows system
 
-### 0. Install `Git-Bash` by `scoop`
+### 0. Install `scoop` and portable `git`
 
-```powershell
-# run in Windows PowerShell or pwsh
+> Run in Windows PowerShell or `pwsh`
+
+```ps1
 Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 Invoke-RestMethod -Uri https://get.scoop.sh | Invoke-Expression
 scoop install git
-git-bash
 ```
+
+> [!TIP]
+> After installing git, you can copy and run the script `sh -c
+> "$HOME/.config/utils/dotfiles-public-setup.sh"` to skip the following
+> sections.
 
 ### 1. Clone as a bare repo
 
@@ -43,25 +47,25 @@ cd $HOME; git clone --bare <remote-repo-url> $HOME/.dotfiles-public
 ```
 
 > [!NOTE]
-> Permission denied error may occur when cloning a private repo or when cloning
-> by ssh, you can either:
+> Permission denied error may occur when cloning a repository that requires ssh
+> key athentication, you can either:
 >
-> - generate a new ssh key and add it to github account
-> - clone by `https`
+> - generate a new ssh key and upload it to the github account
+> - use a public dotfile repository and clone it by `https`
 
 ### 2. **CHECKOUT** the actual content from the bare repository to your `$HOME`
 
 ```bash
 alias config='git --git-dir=$HOME/.dotfiles-public/ --work-tree=$HOME';
-# WARN: the following command WITHOUT branch name will checkout the default branch
-config checkout # or `config checkout <os-branch>`
 # do not show unrelevant files in `git status`
 config config --local status.showUntrackedFiles no
+# WARN: WITHOUT a branch name, default branch is checked out
+config checkout <os-branch>
 ```
 
 > [!NOTE]
 >
-> - Git may prevent you overwrite files that already present in current system:
+> - Git will prevent you overwrite files that already present in current system:
 >
 > ```txt
 > error: The following untracked working tree files would be overwritten by checkout:
@@ -74,14 +78,13 @@ config config --local status.showUntrackedFiles no
 > - try back up the files or remove them:
 >
 > ```bash
-> # move existing dotfiles into `$HOME/.dotfiles-backup/`
 > # WARN: should always check the output from awk first!!!
-> config checkout 2>&1 | head -n -2 | tail -n +2 | awk {'print $1'} | xargs -I{} bash -c 'mkdir -p $HOME/.dotfiles-backup/$(dirname {}) && mv -nv {} $HOME/.dotfiles-backup/{}'
+> config checkout 2>&1 | head -n -2 | tail -n +2 | awk '{print $1}';
+> # move existing dotfiles into `$HOME/.dotfiles-public-backup/`
+> config checkout 2>&1 | head -n -2 | tail -n +2 | awk '{print $1}' | xargs -I{} bash -c "mkdir -p $HOME/.dotfiles-public-backup/\$(dirname {}) && mv -nv {} $HOME/.dotfiles-backup/{}";
 > # Re-run the check out if your previous checkout failed
-> # WARN: the following command WITHOUT branch name will checkout the default branch
-> config checkout # or `config checkout <os-branch>`
-> # do not show unrelevant files in `git status`
-> config config --local status.showUntrackedFiles no
+> # WARN: WITHOUT a branch name, default branch is checked out
+> config checkout <os-branch>
 > ```
 
 ### 3. Clone submodules in dotfiles
@@ -93,18 +96,18 @@ config config --local status.showUntrackedFiles no
 
 ```bash
 # update submodules to tracked commits
-git submodule update --init --recursive
+config submodule update --init --recursive
 # update submodules to latest
 config submodule update --init --recursive --remote
 ```
 
 ### 4. Post installation
 
-- After dotfiles are checkout to new system, run `scoop install ...`
+- After dotfiles are cloned to a new system, run `scoop install ...`
 - Copy Windows Terminal `settings.json` to portable Windows Terminal settings directory:
 
 ```bash
-cp ~/.config/wt/settings.json ~/scoop/apps/windows-terminal/settings/settings.json
+cp $HOME/.config/wt/settings.json $HOME/scoop/apps/windows-terminal/settings/settings.json
 ```
 
 - Check `pwsh` `$PROFILE` file can be read successfully
@@ -246,22 +249,22 @@ tar -xvzf "./$FONT_FILE" # requires unzip
 git
 pwsh
 starship
-extras/windows-terminal
-versions/windows-terminal-preview
-fd
-ripgrep
-gcc
+nvm
 pyenv
+gcc
 make
 neovim
+fd
+ripgrep
 fzf
 kanata
-extras/glazewm
-
-delta
-nvm
-cmake
 gh
+delta
+extras/windows-terminal
+extras/glazewm
+versions/windows-terminal-preview
+
+cmake
 gitui
 wget
 7zip
@@ -274,19 +277,22 @@ extras/musicplayer2
 
 ### Shell related
 
-- `pwsh` (by winget or Microsoft Store)
+- `pwsh` (from `scoop`, `Microsoft Store`, or `winget`)
   - `z`, `PSReadLine`
 
-```pwsh
-# run in pwsh, not Windows PowerShell
+```ps1
+# run in pwsh, NOT Windows PowerShell
 Install-Module -Name z
-Install-Module PSReadLine # may be already installed natively 
+
+# Store version pwsh may come with PSReadLine
+Get-Module PSReadLine -ListAvailable
+Install-Module PSReadLine -Repository PSGallery -Scope CurrentUser -Force
 # pre-release
-# Install-Module PSReadLine -AllowPrerelease -Force
+# Install-Module PSReadLine -Repository PSGallery -Scope CurrentUser -AllowPrerelease -Force
 ```
 
 - terminal recorders:
-  - `yarn global add terminalizer`
+  - `terminalizer`
   - `asciinema`
   - `vhs`
 
@@ -319,10 +325,9 @@ Install-Module PSReadLine # may be already installed natively
   - `extras/wezterm`
   - `extras/alacritty`
 - `extras/postman`
-- Podman in WSL (alternatives to docker), kubernetes
 - VirtualBox, VM, qemu
 - Wireshark, Pingplotter
-- PowerToys Preview
+- ~~PowerToys Preview~~
   - key mappings
 
 ### Misc
@@ -336,10 +341,11 @@ Install-Module PSReadLine # may be already installed natively
 - Obsidian: note taking (markdown)
   - keymaps, settings, appearance
 - ShellExView (NirSoft): fix file explorer right click hanging issues
+- Ventoy: create bootable usb
 
 # Shrink WSL2 Virtual Disk
 
-```powershell
+```ps1
 # shutdown all wsl instances
 wsl --shutdown
 
@@ -347,7 +353,9 @@ wsl --shutdown
 diskpart
 
 # fill with path to file `ext4.vhdx`, for example
-select vdisk file="$YOUR_HOME\AppData\Local\Packages\CanonicalGroupLimited.Ubuntu22.04LTS_79rhkp1fndgsc\LocalState\ext4.vhdx"
+# default $HOME/AppData/Local/Packages/CanonicalGroupLimited.Ubuntu22.04LTS_79rhkp1fndgsc/LocalState/ext4.vhdx
+# can be moved by `wsl --manage <distro_name> --move <new_location>`
+select vdisk file="path_to_ext4.vhdx"
 
 attach vdisk readonly
 compact vdisk
