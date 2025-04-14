@@ -10,7 +10,7 @@ NC='\033[0m' # No Color
 WARNING_MSG=$(
   cat <<-EOF
 ${BOLD}${YELLOW}WARNING:${NC}
-=== Windows Public Dotfiles ===
+${BOLD}${CYAN}=== Windows PUBLIC Dotfiles ===${NC}
 This script is intended to set up a new ${BOLD}${CYAN}Windows system${NC}.
 You should run this script only ${BOLD}${YELLOW}once${NC} for the new Windows.
 Do you still want to run this script?
