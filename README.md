@@ -90,7 +90,7 @@ config checkout <os-branch>
 ### 3. Clone submodules in dotfiles
 
 > [!TIP]
-> Submodules may help tracking tightly coupled files
+> Submodules can help tracking tightly coupled files
 >
 > - [make a tracked directory to git submodule](https://stackoverflow.com/questions/36386667/how-to-make-an-existing-directory-within-a-git-repository-a-git-submodule)
 
