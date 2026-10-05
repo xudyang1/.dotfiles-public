@@ -1,0 +1,48 @@
+# vim: filetype=sh
+# shellcheck shell=sh
+
+FD_COMMAND='fd'
+if [ -f '/etc/debian_version' ]; then
+  FD_COMMAND='fdfind'
+fi
+
+FDFIND_DEFAULT_OPTIONS='--hidden --color=never \
+-E .git -E node_modules -E .dotfiles -E .cache -E .local'
+
+export FZF_DEFAULT_COMMAND="$FD_COMMAND --type file $FDFIND_DEFAULT_OPTIONS"
+export FZF_DEFAULT_OPTS="--multi --reverse --cycle --height='40%' \
+--info='inline' --no-separator --tiebreak='length,index' \
+--preview='echo {}' --preview-window='right:100:wrap:cycle:hidden' \
+--bind='alt-p:toggle-preview' \
+--bind='alt-j:preview-half-page-down' \
+--bind='alt-k:preview-half-page-up' \
+--bind='alt-l:kill-line' \
+--bind='alt-g:first' \
+--bind='alt-G:last' \
+--bind='alt-a:toggle-all' \
+--bind='alt-s:toggle-sort' \
+--bind='ctrl-y:execute-silent( \
+  b64=\$(echo {} | base64 | tr -d \"\n\"); \
+  if [ -n \"\$TMUX\" ]; then \
+    esc=\"\ePtmux;\e\e]52;c;\$b64\a\e\\\\\"; \
+  else \
+    esc=\"\e]52;c;\$b64\a\"; \
+  fi; \
+  printf \"\$esc\" > /dev/tty; \
+)+change-header(Copied to clipboard!)'"
+
+export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+export FZF_CTRL_T_OPTS="--preview='head -500 {}' \
+--bind='ctrl-v:become(nvim {})' \
+--bind='ctrl-g:reload( \
+$FD_COMMAND --type file --no-ignore $FDFIND_DEFAULT_OPTIONS \
+)'"
+
+# export FZF_CTRL_R_COMMAND=""
+export FZF_CTRL_R_OPTS="--preview-window='up:3:hidden:wrap'"
+
+export FZF_ALT_C_COMMAND="$FD_COMMAND --type directory $FDFIND_DEFAULT_OPTIONS"
+# export FZF_ALT_C_OPTS=""
+
+unset FDFIND_DEFAULT_OPTIONS
+unset FD_COMMAND
