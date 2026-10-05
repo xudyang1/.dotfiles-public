@@ -1,0 +1,20 @@
+{
+  "waitForEnterForFilteredHints": false,
+  "keyMappings": "# chrome supports: ctrl+r for refresh\n# ctrl+shift+r for hard refresh (ignore caches)\n\n##### Current tab history & tab url\nmap a goBack\nmap s goForward\nmap h goBack\nmap l goForward\n#map gt goUp\n#map gT goToRoot\n\n##### Tab navigation & move tab\nmap A previousTab\nmap S nextTab\nmap <c-j> previousTab\nmap <c-k> nextTab\nmap ; visitPreviousTab\nmap w visitPreviousTab\nmap gw lastTab\nmap g; lastTab\nmap <a-j> moveTabLeft\nmap <a-k> moveTabRight\nmap <a-[> moveTabLeft count=99\nmap <a-]> moveTabRight count=99\n# swap: lower case for global mark, upper case for local mark\nmap m Marks.activateCreateMode swap\nmap ` Marks.activateGotoMode swap\nmap ' Marks.activateGotoMode swap\n\n##### Page scroll\nmap e scrollPageUp\nmap H scrollLeft\nmap L scrollRight\n\n##### Vomnibars\nmap o Vomnibar.activateInNewTab\nmap O Vomnibar.activate\nmap b Vomnibar.activateBookmarksInNewTab\nmap B Vomnibar.activateBookmarks\nmap t Vomnibar.activateTabSelection\n# W reserved for open current tab in a new window\n# map W Vomnibar.activateTabSelection\n\n##### Follow links\nmap F LinkHints.activateModeToOpenInNewForegroundTab\nmap <a-F> LinkHints.activateModeToOpenInNewTab\nmap <a-h> LinkHints.activateMode action=focus\nmap <a-H> LinkHints.activateMode action=hover\nmap <a-c> LinkHints.activateMode action=copy-text\nmap I LinkHints.activateModeToOpenIncognito\nmap ga goPrevious\nmap gs goNext\nmap gh goPrevious\nmap gl goNext\n\n##### Misc\nmap R reload hard\nmap q passNextKey\n\n##### Custom search engines\nmap gy Vomnibar.activateInNewTab keyword=y\nmap gt Vomnibar.activateInNewTab keyword=t\n\n##### Disables\n# unmap [[\n# unmap ]]\nunmap <<\nunmap >>\nunmap <c-e>\nunmap <c-y>\nunmap ^",
+  "linkHintCharacters": "sadfewvg",
+  "nextPatterns": "下一章,下一页,下一,后一,next,more,newer,>,›,→,»,≫,>>",
+  "previousPatterns": "上一章,上一页,上一,前一,prev,previous,back,older,<,‹,←,«,≪,<<",
+  "smoothScroll": false,
+  "searchEngines": "w: https://www.wikipedia.org/w/index.php?title=Special:Search&search=%s Wikipedia\ng: https://www.google.com/search?q=%s Google\ny: https://www.youtube.com/results?search_query=%s Youtube\ngm: https://www.google.com/maps?q=%s Google maps\naz: https://www.amazon.com/s/?field-keywords=%s Amazon\nt: https://translate.google.com/?sl=en&tl=zh-CN&text=%s Google Translate\n\n# b: https://www.bing.com/search?q=%s Bing\n# d: https://duckduckgo.com/?q=%s DuckDuckGo\n# qw: https://www.qwant.com/?q=%s Qwant\n# l: https://www.google.com/search?q=%s&btnI I'm feeling lucky...",
+  "settingsVersion": "2.1.2",
+  "exclusionRules": [
+    {
+      "passKeys": "",
+      "pattern": "https?://mail.google.com/*"
+    },
+    {
+      "passKeys": "tjklmPN,.",
+      "pattern": "https://www.youtube.com/watch*"
+    }
+  ]
+}

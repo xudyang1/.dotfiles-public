@@ -1,0 +1,451 @@
+{
+    "$help": "https://aka.ms/terminal-documentation",
+    "$schema": "https://aka.ms/terminal-profiles-schema-preview",
+    "actions":
+    [
+        {
+            "command":
+            {
+                "action": "globalSummon",
+                "desktop": "toCurrent",
+                "dropdownDuration": 1,
+                "monitor": "toMouse",
+                "name": "_quake",
+                "toggleVisibility": true
+            },
+            "id": "User.globalSummon.2BB56DE6"
+        },
+        {
+            "command":
+            {
+                "action": "openSettings",
+                "target": "settingsUI"
+            },
+            "id": "User.openSettings.6CD791B"
+        },
+        {
+            "command": "restoreLastClosed",
+            "id": "User.restoreLastClosed"
+        },
+        {
+            "command":
+            {
+                "action": "moveFocus",
+                "direction": "nextInOrder"
+            },
+            "id": "User.moveFocus.D7681B66"
+        },
+        {
+            "command":
+            {
+                "action": "moveFocus",
+                "direction": "previous"
+            },
+            "id": "User.moveFocus.75247157"
+        },
+        {
+            "command":
+            {
+                "action": "moveFocus",
+                "direction": "left"
+            },
+            "id": "User.moveFocus.2A0DA8E0"
+        },
+        {
+            "command":
+            {
+                "action": "moveFocus",
+                "direction": "down"
+            },
+            "id": "User.moveFocus.F747588A"
+        },
+        {
+            "command":
+            {
+                "action": "moveFocus",
+                "direction": "up"
+            },
+            "id": "User.moveFocus.6CD791B"
+        },
+        {
+            "command":
+            {
+                "action": "moveFocus",
+                "direction": "right"
+            },
+            "id": "User.moveFocus.87C324ED"
+        },
+        {
+            "command":
+            {
+                "action": "splitPane",
+                "elevate": true,
+                "index": 0,
+                "split": "auto"
+            },
+            "id": "User.splitPane.2E5D6D57"
+        },
+        {
+            "command":
+            {
+                "action": "splitPane",
+                "split": "auto",
+                "splitMode": "duplicate"
+            },
+            "id": "User.splitPane.A6751878"
+        },
+        {
+            "command": "togglePaneZoom",
+            "id": "User.togglePaneZoom"
+        },
+        {
+            "command": "toggleSplitOrientation",
+            "id": "User.toggleSplitOrientation"
+        },
+        {
+            "command": "toggleFocusMode",
+            "id": "User.toggleFocusMode"
+        },
+        {
+            "command": "openTabRenamer",
+            "id": "User.openTabRenamer"
+        },
+        {
+            "command":
+            {
+                "action": "splitPane",
+                "index": 0,
+                "split": "auto"
+            },
+            "id": "User.splitPane.48B6353E"
+        },
+        {
+            "command":
+            {
+                "action": "splitPane",
+                "index": 1,
+                "split": "auto"
+            },
+            "id": "User.splitPane.125D7ADA"
+        },
+        {
+            "command":
+            {
+                "action": "splitPane",
+                "index": 2,
+                "split": "auto"
+            },
+            "id": "User.splitPane.227DFB6"
+        },
+        {
+            "command":
+            {
+                "action": "scrollUp"
+            },
+            "id": "User.scrollUp.0"
+        },
+        {
+            "command":
+            {
+                "action": "scrollDown"
+            },
+            "id": "User.scrollDown.0"
+        },
+        {
+            "command":
+            {
+                "action": "adjustFontSize",
+                "delta": -1
+            },
+            "id": "User.adjustFontSize.E2698FAA"
+        },
+        {
+            "command":
+            {
+                "action": "adjustFontSize",
+                "delta": 1
+            },
+            "id": "User.adjustFontSize.E04D5229"
+        },
+        {
+            "command":
+            {
+                "action": "adjustOpacity",
+                "opacity": 80,
+                "relative": false
+            },
+            "id": "User.adjustOpacity.E91E077D"
+        },
+        {
+            "command":
+            {
+                "action": "adjustOpacity",
+                "opacity": 100,
+                "relative": false
+            },
+            "id": "User.adjustOpacity.A7506725"
+        }
+    ],
+    "alwaysShowTabs": false,
+    "copyFormatting": "none",
+    "copyOnSelect": false,
+    "defaultProfile": "{574e775e-4f2a-5b96-ac1e-a2962a402336}",
+    "disableAnimations": true,
+    "firstWindowPreference": "persistedLayoutAndContent",
+    "initialCols": 120,
+    "initialRows": 30,
+    "keybindings":
+    [
+        {
+            "id": "User.globalSummon.2BB56DE6",
+            "keys": "win+;"
+        },
+        {
+            "id": "User.openSettings.6CD791B",
+            "keys": "ctrl+alt+shift+comma"
+        },
+        {
+            "id": "User.restoreLastClosed",
+            "keys": "ctrl+shift+t"
+        },
+        {
+            "id": "User.moveFocus.D7681B66",
+            "keys": "ctrl+shift+;"
+        },
+        {
+            "id": "User.moveFocus.75247157",
+            "keys": "ctrl+alt+;"
+        },
+        {
+            "id": "User.moveFocus.2A0DA8E0",
+            "keys": "ctrl+shift+h"
+        },
+        {
+            "id": "User.moveFocus.F747588A",
+            "keys": "ctrl+shift+j"
+        },
+        {
+            "id": "User.moveFocus.6CD791B",
+            "keys": "ctrl+shift+k"
+        },
+        {
+            "id": "User.moveFocus.87C324ED",
+            "keys": "ctrl+shift+l"
+        },
+        {
+            "id": "User.splitPane.2E5D6D57",
+            "keys": "ctrl+shift+e"
+        },
+        {
+            "id": "User.splitPane.A6751878",
+            "keys": "ctrl+shift+s"
+        },
+        {
+            "id": "User.togglePaneZoom",
+            "keys": "ctrl+shift+'"
+        },
+        {
+            "id": "User.toggleSplitOrientation",
+            "keys": "ctrl+shift+period"
+        },
+        {
+            "id": "User.toggleFocusMode",
+            "keys": "ctrl+shift+z"
+        },
+        {
+            "id": "User.openTabRenamer",
+            "keys": "ctrl+shift+r"
+        },
+        {
+            "id": "User.splitPane.48B6353E",
+            "keys": "ctrl+1"
+        },
+        {
+            "id": "User.splitPane.125D7ADA",
+            "keys": "ctrl+2"
+        },
+        {
+            "id": "User.splitPane.227DFB6",
+            "keys": "ctrl+3"
+        },
+        {
+            "id": "User.scrollUp.0",
+            "keys": "ctrl+minus"
+        },
+        {
+            "id": "User.scrollDown.0",
+            "keys": "ctrl+plus"
+        },
+        {
+            "id": "User.adjustFontSize.E2698FAA",
+            "keys": "ctrl+shift+minus"
+        },
+        {
+            "id": "User.adjustFontSize.E04D5229",
+            "keys": "ctrl+shift+plus"
+        },
+        {
+            "id": "User.adjustOpacity.E91E077D",
+            "keys": "ctrl+shift+["
+        },
+        {
+            "id": "User.adjustOpacity.A7506725",
+            "keys": "ctrl+shift+]"
+        },
+        {
+            "id": null,
+            "keys": "ctrl+,"
+        },
+        {
+            "id": null,
+            "keys": "alt+enter"
+        },
+        {
+            "id": null,
+            "keys": "alt+space"
+        }
+    ],
+    "launchMode": "maximized",
+    "newTabMenu":
+    [
+        {
+            "type": "remainingProfiles"
+        }
+    ],
+    "profiles":
+    {
+        "defaults":
+        {
+            "altGrAliasing": false,
+            "background": "#1D2021",
+            "backgroundImage": null,
+            "backgroundImageAlignment": "center",
+            "backgroundImageOpacity": 1,
+            "closeOnExit": "graceful",
+            "colorScheme": "my Dark+",
+            "cursorShape": "filledBox",
+            "font":
+            {
+                "face": "FiraCode Nerd Font",
+                "features":
+                {
+                    "calt": 1,
+                    "cv02": 1,
+                    "ss01": 1,
+                    "ss03": 1,
+                    "ss05": 1
+                },
+                "size": 14
+            },
+            "intenseTextStyle": "bold",
+            "opacity": 80,
+            "padding": "4",
+            "scrollbarState": "hidden",
+            "snapOnInput": true,
+            "tabColor": "#000000",
+            "useAcrylic": false
+        },
+        "list":
+        [
+            {
+                "guid": "{574e775e-4f2a-5b96-ac1e-a2962a402336}",
+                "hidden": false,
+                "name": "PowerShell",
+                "source": "Windows.Terminal.PowershellCore"
+            },
+            {
+                "commandline": "%USERPROFILE%\\scoop\\apps\\git\\current\\bin\\bash.exe -i -l",
+                "guid": "{2ece5bfe-50ed-5f3a-ab87-5cd4baafed2b}",
+                "hidden": false,
+                "icon": "%USERPROFILE%\\scoop\\apps\\git\\current\\mingw64\\share\\git\\git-for-windows.ico",
+                "name": "Git Bash",
+                "startingDirectory": "%USERPROFILE%"
+            },
+            {
+                "guid": "{4ff56d04-d9cf-57ea-bae2-ad396374e7e3}",
+                "hidden": false,
+                "name": "Ubuntu 22.04.5 LTS",
+                "source": "CanonicalGroupLimited.Ubuntu22.04LTS_79rhkp1fndgsc"
+            },
+            {
+                "guid": "{0caa0dad-35be-5f56-a8ff-afceeeaa6101}",
+                "hidden": false,
+                "name": "Command Prompt"
+            },
+            {
+                "guid": "{61c54bbd-c2c6-5271-96e7-009a87ff44bf}",
+                "hidden": false,
+                "name": "Windows PowerShell"
+            },
+            {
+                "guid": "{b453ae62-4e3d-5e58-b989-0a998ec441b8}",
+                "hidden": false,
+                "name": "Azure Cloud Shell",
+                "source": "Windows.Terminal.Azure"
+            },
+            {
+                "guid": "{17bf3de4-5353-5709-bcf9-835bd952a95e}",
+                "hidden": true,
+                "name": "Ubuntu-22.04",
+                "source": "Windows.Terminal.Wsl"
+            }
+        ]
+    },
+    "schemes": [
+      {
+        "name": "my Dark+",
+        "black": "#000000",
+        "red": "#cd3131",
+        "green": "#0dbc79",
+        "yellow": "#e5e510",
+        "blue": "#2472c8",
+        "purple": "#bc3fbc",
+        "cyan": "#11a8cd",
+        "white": "#e5e5e5",
+        "brightBlack": "#666666",
+        "brightRed": "#f14c4c",
+        "brightGreen": "#23d18b",
+        "brightYellow": "#f5f543",
+        "brightBlue": "#3b8eea",
+        "brightPurple": "#d670d6",
+        "brightCyan": "#29b8db",
+        "brightWhite": "#e5e5e5",
+        "background": "#1e1e1e",
+        "foreground": "#cccccc",
+        "cursorColor": "#fbf1c7",
+        "selectionBackground": "#3a3d41"
+      }
+    ],
+    "showTabsInTitlebar": true,
+    "tabSwitcherMode": "mru",
+    "tabWidthMode": "equal",
+    "theme": "myDarkTheme",
+    "themes":
+    [
+        {
+            "name": "myDarkTheme",
+            "tab":
+            {
+                "background": "terminalBackground",
+                "iconStyle": "default",
+                "showCloseButton": "hover",
+                "unfocusedBackground": "terminalBackground"
+            },
+            "tabRow":
+            {
+                "background": "terminalBackground",
+                "unfocusedBackground": "terminalBackground"
+            },
+            "window":
+            {
+                "applicationTheme": "dark",
+                "experimental.rainbowFrame": false,
+                "frame": null,
+                "unfocusedFrame": null,
+                "useMica": false
+            }
+        }
+    ],
+    "useAcrylicInTabRow": false,
+    "windowingBehavior": "useExisting"
+}

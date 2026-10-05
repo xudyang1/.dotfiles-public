@@ -1,0 +1,7 @@
+[wsl2]
+swap=2GB
+localhostForwarding=true
+guiApplications=false
+[experimental]
+autoMemoryReclaim=dropcache
+sparseVhd=true

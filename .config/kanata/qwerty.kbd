@@ -1,0 +1,232 @@
+#|
+TEMPLATE KEYS:
+
+(defsrc
+  esc   f1   f2   f3   f4   f5   f6   f7   f8   f9   f10  f11  f12         prnt  nlck  pause
+  `     1    2    3    4    5    6    7    8    9    0    -    =     bspc  ins   home  pgup
+  tab   q    w    e    r    t    y    u    i    o    p    [    ]     \     del   end   pgdn
+  caps  a    s    d    f    g    h    j    k    l    ;    '    enter
+  lsft  z    x    c    v    b    n    m    ,    .    /         rsft              up
+  lctl  lmet lalt           spc                 ralt fn   menu rctl        left  down  right
+)
+
+OTHER KEYS:
+
+VolumeUp VolumeDown VolumeMute
+brup brdn ; brightness
+MediaTrackPrevious MediaTrackNext MediaPlayPause
+mouseleft mouseright mousemid mousebackward mouseforward mousewheelup mousewheeldown mousewheelleft mousewheelright
+homepage media mail email calc
+nop0 nop1 ... nop9
+
+lrld lrld-prev lrld-next
+|#
+
+(defcfg
+  ;; Allow kanata to process keys even if not defined
+  ;;process-unmapped-keys yes
+
+  ;; Specify device to intercept
+  ;;linux-dev /dev/input/by-id/some_kbd
+)
+
+;;(defoverrides)
+
+(defvar
+  tap-timeout       200
+  hold-timeout      200
+  tt                $tap-timeout
+  ht                $hold-timeout
+)
+
+(defvirtualkeys
+  VK_ALT  lalt
+  VK_CTL  lctl
+)
+
+(defalias
+  KC_GRAVE          `
+  LT_MOTION-KC_TAB  (multi (tap-hold-press $tt $ht tab (layer-while-held _MOTION))
+                           (on-release release-vkey VK_CTL)
+                           (on-release release-vkey VK_ALT))
+  KC_ESC            esc
+  ;;ESC_CTL           (tap-hold-press $tt $ht esc lctl)
+
+  TAB-ENTER         (macro tab enter)
+
+  CTL_TAB           (fork (multi lctl (on-press press-vkey VK_CTL) tab) tab (lctl))
+  ALT_TAB           (fork (multi lalt (on-press press-vkey VK_ALT) tab) tab (lalt))
+
+  TOGGLE_BASE       (switch ((base-layer _QWERTY)) (layer-switch _DVORAK) break
+                            ((base-layer _DVORAK)) (layer-switch _QWERTY) break
+                            ()                    _                       break)
+
+  MO_SYMBOL         (multi lalt (layer-while-held _SYMBOL))
+  KC_LBRC (multi (release-key lalt) [)
+  KC_LCBR (multi (release-key lalt) S-[)
+  KC_LPRN (multi (release-key lalt) S-9)
+  KC_RPRN (multi (release-key lalt) ])
+  KC_RCBR (multi (release-key lalt) S-])
+  KC_RBRC (multi (release-key lalt) S-0)
+  KC_BSPC (multi (release-key lalt) bspc)
+  KC_DEL (multi (release-key lalt) del)
+  KC_ENTER (multi (release-key lalt) enter)
+)
+
+(defsrc)
+
+;; base layer
+(deflayermap (_QWERTY)
+  esc   @KC_GRAVE
+  tab   @LT_MOTION-KC_TAB
+  caps  @KC_ESC
+  lctl  lctl
+  ;;lalt  @MO_SYMBOL
+)
+
+(deflayermap (_DVORAK)
+  esc   @KC_GRAVE
+  tab   @LT_MOTION-KC_TAB
+  caps  @KC_ESC
+  lctl  lctl
+  ;;lalt  @MO_SYMBOL
+
+  ;; programmer dvorak layout
+  q     ;
+  w     ,
+  e     .
+  r     p
+  t     y
+  y     f
+  u     g
+  i     c
+  o     r
+  p     l
+  [     /
+  ]     =
+  ;;a     a
+  s     o
+  d     e
+  f     u
+  g     i
+  h     d
+  j     h
+  k     t
+  l     n
+  ;     s
+  '     -
+  z     '
+  x     q
+  c     j
+  v     k
+  b     x
+  n     b
+  m     m
+  ,     w
+  .     v
+  /     z
+  -     [
+  =     ]
+)
+
+(deflayermap (_MOTION)
+  lalt  lalt
+  ;     lctl
+
+  j     down
+  k     up
+  h     left
+  l     right
+
+  s     home
+  d     end
+  w     pgup
+  e     pgdn
+
+  f     @ALT_TAB
+  g     @CTL_TAB
+
+  c     C-c
+  v     C-v
+
+  u     @KC_BSPC
+  i     @KC_DEL
+
+  r     lrld
+  spc   @TOGGLE_BASE
+
+  enter @TAB-ENTER
+
+  m     VolumeMute
+  [     VolumeDown
+  ]     VolumeUp
+  ,     MediaTrackPrevious
+  .     MediaTrackNext
+  /     MediaPlayPause
+
+  ;; F-keys
+  1     f1
+  2     f2
+  3     f3
+  4     f4
+  5     f5
+  6     f6
+  7     f7
+  8     f8
+  9     f9
+  0     f10
+  -     f11
+  =     f12
+)
+(deflayermap (_SYMBOL)
+  s     @KC_LBRC ;; [
+  d     @KC_LCBR ;; {
+  f     @KC_LPRN ;; (
+  j     @KC_RPRN ;; )
+  k     @KC_RCBR ;; }
+  l     @KC_RBRC ;; ]
+  h     @KC_BSPC ;; bspc
+  ;     @KC_DEL  ;; del
+
+  ;;j     @KC_BSPC ;; bspc
+  ;;k     @KC_DEL  ;; del
+)
+
+;;(defalias
+;;  mouse-up          (movemouse-accel-up 1 1000 1 10)
+;;  mouse-left        (movemouse-accel-left 1 1000 1 15)
+;;  mouse-down        (movemouse-accel-down 1 1000 1 15)
+;;  mouse-right       (movemouse-accel-right 1 1000 1 15)
+;;
+;;  win-left          (on-press tap-vkey vk-win-left)
+;;  win-right         (on-press tap-vkey vk-win-right)
+;;  win-up            (on-press tap-vkey vk-win-up)
+;;  win-down          (on-press tap-vkey vk-win-down)
+;;  win               (tap-hold-press $tt $ht lmet (layer-while-held _WIN))
+;;  win-tab           (on-press tap-vkey vk-win-tab)
+;;  win-spc           (on-press tap-vkey vk-win-spc)
+;;)
+;;(defvirtualkeys
+;;  vk-win-left   (macro M-left)
+;;  vk-win-right  (macro M-right)
+;;  vk-win-up     (macro M-up)
+;;  vk-win-down   (macro M-down)
+;;)
+;;(defvirtualkeys
+;;  vk-win-tab    (macro M-tab)
+;;  vk-win-spc    (macro M-spc)
+;;)
+;;;; need to enable process-unmapped-keys
+;;(deflayermap (_WIN)
+;;  tab   @win-tab
+;;  spc   @win-spc
+;;  ,     mlft
+;;  .     mrgt
+;;  [     mbck
+;;  ]     mfwd
+;;
+;;  ,     @win-left
+;;  .     @win-right
+;;  p     @win-up
+;;  n     @win-down
+;;)

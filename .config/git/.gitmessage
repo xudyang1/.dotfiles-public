@@ -1,0 +1,27 @@
+
+
+# Title: summary, imperative           50 chars=>#           72 chars=>#
+# * <type>(<scope>): <subject>
+# * type:
+#   * chore: Build process or auxiliary tool changes
+#   * ci: CI related changes
+#   * docs: Documentation only changes
+#   * feat: A new feature
+#   * fix: A bug fix
+#   * perf: A code change that improves performance
+#   * refactor: A code change with no bugfix or new feature added
+#   * style: Markup, white-space, formatting, missing semi-colons
+#   * test: Adding missing tests
+# * scope: component or file name
+
+# <body>: explain *WHAT* and *WHY* (not *HOW*) =========================
+# * What problem is being solved?
+# * What is the solution to said problem?
+# * Are there any side effects or dependencies?
+
+# <footer>: closing reference or issue link, if any ====================
+# * Include at least one empty line before it.
+# * Include Co-authored-by for all contributors. Format: 
+#   * Co-authored-by: name <user@users.noreply.github.com>
+#
+# ======================================================================
