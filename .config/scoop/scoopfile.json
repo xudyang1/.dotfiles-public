@@ -1,0 +1,245 @@
+{
+    "config": {
+        "scoop_repo": "https://github.com/ScoopInstaller/Scoop",
+        "scoop_branch": "master"
+    },
+    "buckets": [
+        {
+            "Name": "main",
+            "Source": "https://github.com/ScoopInstaller/Main",
+            "Updated": "2026-10-05T21:08:41-04:00",
+            "Manifests": 1668
+        },
+        {
+            "Name": "extras",
+            "Source": "https://github.com/ScoopInstaller/Extras",
+            "Updated": "2026-10-05T21:08:46-04:00",
+            "Manifests": 2405
+        },
+        {
+            "Name": "versions",
+            "Source": "https://github.com/ScoopInstaller/Versions",
+            "Updated": "2026-10-05T21:21:39-04:00",
+            "Manifests": 623
+        }
+    ],
+    "apps": [
+        {
+            "Name": "7zip",
+            "Version": "26.01",
+            "Source": "main",
+            "Updated": "2026-05-14T20:15:10.6938024-04:00",
+            "Info": ""
+        },
+        {
+            "Name": "cacert",
+            "Version": "2023-12-12",
+            "Source": "main",
+            "Updated": "2023-12-31T22:46:16.3853175-05:00",
+            "Info": ""
+        },
+        {
+            "Name": "crystaldiskinfo",
+            "Version": "9.9.2",
+            "Source": "extras",
+            "Updated": "2026-10-05T23:12:19.7771989-04:00",
+            "Info": ""
+        },
+        {
+            "Name": "crystaldiskmark",
+            "Version": "9.0.3",
+            "Source": "extras",
+            "Updated": "2026-10-05T23:12:22.464683-04:00",
+            "Info": ""
+        },
+        {
+            "Name": "delta",
+            "Version": "0.20.1",
+            "Source": "main",
+            "Updated": "2026-10-05T23:12:15.881156-04:00",
+            "Info": ""
+        },
+        {
+            "Name": "fd",
+            "Version": "10.5.0",
+            "Source": "main",
+            "Updated": "2026-10-05T23:12:14.2825384-04:00",
+            "Info": ""
+        },
+        {
+            "Name": "fzf",
+            "Version": "0.74.4",
+            "Source": "main",
+            "Updated": "2026-10-05T23:12:12.6047027-04:00",
+            "Info": ""
+        },
+        {
+            "Name": "gcc",
+            "Version": "15.2.0",
+            "Source": "main",
+            "Updated": "2026-05-14T20:15:41.3902202-04:00",
+            "Info": ""
+        },
+        {
+            "Name": "gh",
+            "Version": "2.102.0",
+            "Source": "main",
+            "Updated": "2026-10-05T23:12:11.5733461-04:00",
+            "Info": ""
+        },
+        {
+            "Name": "gimp",
+            "Version": "3.2.4",
+            "Source": "extras",
+            "Updated": "2026-08-13T23:41:11.726187-04:00",
+            "Info": ""
+        },
+        {
+            "Name": "git",
+            "Version": "2.46.2",
+            "Source": "https://raw.githubusercontent.com/ScoopInstaller/Main/6ef718a96949c6d1aece63b6cea83d3aedc7125d/bucket/git.json",
+            "Updated": "2025-11-02T20:15:19.4373329-05:00",
+            "Info": ""
+        },
+        {
+            "Name": "glazewm",
+            "Version": "3.9.1",
+            "Source": "extras",
+            "Updated": "2025-11-02T01:26:23.044924-04:00",
+            "Info": ""
+        },
+        {
+            "Name": "gzip",
+            "Version": "1.3.12",
+            "Source": "main",
+            "Updated": "2024-07-01T14:39:28.4965984-04:00",
+            "Info": ""
+        },
+        {
+            "Name": "hwinfo",
+            "Version": "8.34-5870",
+            "Source": "extras",
+            "Updated": "2026-01-02T20:49:30.3407923-05:00",
+            "Info": ""
+        },
+        {
+            "Name": "hyperfine",
+            "Version": "1.20.0",
+            "Source": "main",
+            "Updated": "2026-05-11T21:17:26.2224858-04:00",
+            "Info": ""
+        },
+        {
+            "Name": "innounp",
+            "Version": "2.70.1",
+            "Source": "main",
+            "Updated": "2026-08-13T23:38:08.9256282-04:00",
+            "Info": ""
+        },
+        {
+            "Name": "kanata",
+            "Version": "1.8.1",
+            "Source": "extras",
+            "Updated": "2025-05-11T16:14:41.0970188-04:00",
+            "Info": ""
+        },
+        {
+            "Name": "keepassxc",
+            "Version": "2.7.12",
+            "Source": "extras",
+            "Updated": "2026-09-07T13:19:06.0157081-04:00",
+            "Info": ""
+        },
+        {
+            "Name": "keyviz",
+            "Version": "1.0.6",
+            "Source": "extras",
+            "Updated": "2024-01-13T19:42:46.287111-05:00",
+            "Info": ""
+        },
+        {
+            "Name": "make",
+            "Version": "4.4.1",
+            "Source": "main",
+            "Updated": "2025-05-28T23:22:47.3523033-04:00",
+            "Info": ""
+        },
+        {
+            "Name": "musicplayer2",
+            "Version": "2.76.1",
+            "Source": "extras",
+            "Updated": "2023-10-31T16:57:22.5873069-04:00",
+            "Info": ""
+        },
+        {
+            "Name": "neovim-nightly",
+            "Version": "0.13.0-1808",
+            "Source": "versions",
+            "Updated": "2026-10-05T23:12:01.0263795-04:00",
+            "Info": ""
+        },
+        {
+            "Name": "nvm",
+            "Version": "1.1.12",
+            "Source": "main",
+            "Updated": "2024-07-03T23:56:17.1381105-04:00",
+            "Info": ""
+        },
+        {
+            "Name": "obs-studio",
+            "Version": "32.0.2",
+            "Source": "extras",
+            "Updated": "2025-12-03T18:14:26.3362327-05:00",
+            "Info": ""
+        },
+        {
+            "Name": "ripgrep",
+            "Version": "15.2.0",
+            "Source": "main",
+            "Updated": "2026-10-05T23:12:10.2702847-04:00",
+            "Info": ""
+        },
+        {
+            "Name": "rufus",
+            "Version": "4.15",
+            "Source": "extras",
+            "Updated": "2026-10-05T23:12:08.8252564-04:00",
+            "Info": ""
+        },
+        {
+            "Name": "tree-sitter",
+            "Version": "0.27.0",
+            "Source": "main",
+            "Updated": "2026-10-05T23:12:02.4781753-04:00",
+            "Info": ""
+        },
+        {
+            "Name": "unzip",
+            "Version": "6.00",
+            "Source": "main",
+            "Updated": "2024-07-01T14:37:19.5802186-04:00",
+            "Info": ""
+        },
+        {
+            "Name": "uv",
+            "Version": "0.12.23",
+            "Source": "main",
+            "Updated": "2026-10-05T23:12:07.6750647-04:00",
+            "Info": ""
+        },
+        {
+            "Name": "wezterm",
+            "Version": "20240203-110809-5046fc22",
+            "Source": "extras",
+            "Updated": "2025-04-19T17:19:39.5478576-04:00",
+            "Info": ""
+        },
+        {
+            "Name": "wget",
+            "Version": "1.21.4",
+            "Source": "main",
+            "Updated": "2023-07-19T18:47:27.4484489-04:00",
+            "Info": ""
+        }
+    ]
+}

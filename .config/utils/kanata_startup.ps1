@@ -1,0 +1,7 @@
+$StartupPath="HKCU:\Software\Microsoft\Windows\CurrentVersion\Run"
+$ProgramName="Kanata"
+$KanataExecutable="%USERPROFILE%\scoop\apps\kanata\current\kanata.exe"
+$KanataConfig1="%USERPROFILE%\.config\kanata\qwerty.kbd"
+$KanataConfig2="%USERPROFILE%\.config\kanata\dvorak.kbd"
+$StartupCommand="C:\Windows\system32\conhost.exe --headless $KanataExecutable --cfg $KanataConfig1 --cfg $KanataConfig2"
+Set-ItemProperty -LiteralPath "$StartupPath" -Name "$ProgramName" -Value "$StartupCommand"
