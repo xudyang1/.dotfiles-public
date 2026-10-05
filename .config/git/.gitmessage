@@ -1,0 +1,28 @@
+# [TYPE]([SCOPE]): [SUBJECT]
+# 50 characters max; use imperative (e.g., "Add", not "Added")
+# ----------------------------------------------------------------------
+
+# [BODY]
+# Explain *WHAT* and *WHY* (not *HOW*).
+# Wrap lines at 72 characters.
+# - What is the intent of this change?
+# - How does it address the issue?
+# - Any breaking changes or side effects?
+
+# [FOOTER]
+# References: Closes #123, See also: #456
+# Co-authored-by: Name <email@example.com>
+
+# -------------------------- QUICK REFERENCE ---------------------------
+# feat:     A new feature
+# fix:      A bug fix
+# docs:     Documentation only
+# style:    Formatting, missing semi-colons, etc (no code changes)
+# refactor: Code change that neither fixes a bug nor adds a feature
+# perf:     Code change that improves performance
+# test:     Adding/correcting tests
+# build:    Changes affecting build system or external dependencies
+# ci:       Changes to CI config files and scripts
+# chore:    Other changes that don't modify src or test files
+# revert:   Reverts a previous commit
+# ----------------------------------------------------------------------

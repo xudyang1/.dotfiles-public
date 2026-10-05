@@ -1,0 +1,4 @@
+[core]
+  fsmonitor   = true # available in Windows and Mac only
+  fileMode    = false # disable in Windows
+  sshCommand  = "C:/Windows/System32/OpenSSH/ssh.exe"

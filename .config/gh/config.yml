@@ -1,0 +1,34 @@
+git_protocol: ssh
+editor: nvim
+prompt: enabled
+prefer_editor_prompt: enabled
+pager: delta
+telemetry: disabled
+aliases:
+  cs: codespace
+  open: browse
+  prd: pr diff
+  prv: pr view
+  prvw: pr view -w
+  prco: pr checkout
+  tome: issue list --assignee @me
+  atme: issue list --mention @me
+  iv: >-
+    !f() {
+      if [ "$#" != 0 ]; then
+        gh issue view --comments "$@";
+      else
+        local issue;
+        issue=$(gh issue list --json number,state,title,updatedAt --template \
+          '{{range .}}{{tablerow .number .state (truncate 72 .title)
+          (timeago .updatedAt)}}{{end}}' |
+          fzf --accept-nth=1 --preview='gh issue view {1}');
+        if [ -n "$issue" ]; then
+          gh issue view --comments "$issue";
+        fi;
+      fi;
+    }; f "$@"
+  clone: '!gh repo clone "$1" "$2" -- --filter=blob:none'
+  fork: '!gh repo fork --clone --default-branch-only "$1" -- --filter=blob:none'
+  igrep: '!gh issue list --label="$1" | grep -i $2'
+version: "1"
