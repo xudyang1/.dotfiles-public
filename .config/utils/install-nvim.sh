@@ -81,6 +81,7 @@ curl --output-dir "$dest_dir" -LOs "$asset_url"
 REMOTE_DIGEST=$(echo "$json_data" | sed -n "/\"name\": \"$APPIMAGE_NAME\"/,/\"digest\"/p" | sed -n 's/.*"digest": "\(.*\)".*/\1/p')
 if [ -z "$REMOTE_DIGEST" ]; then
   msg -b red "Unable to download sha256 checksum."
+  exit 1
 fi
 LOCAL_DIGEST="sha256:$(sha256sum "$asset_path" | awk '{print $1}')"
 if [ "$LOCAL_DIGEST" != "$REMOTE_DIGEST" ]; then
@@ -110,6 +111,7 @@ if [ -d "$squashfs_dir" ]; then
 fi
 if [ -d "$dest_dir/squashfs-root" ]; then
   mv "$dest_dir/squashfs-root" "$squashfs_dir"
+  chmod -R a+rX "$squashfs_dir"
 else
   msg -b red "No squashfs-root found. Appimage extract failed."
   exit 1
