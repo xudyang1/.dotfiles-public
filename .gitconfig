@@ -48,98 +48,33 @@
   renames     = copy
   tool        = nvimdiff
   colorMoved  = default # delta
-[difftool]
-  # TODO: instead of disable prompt, show remaining diffs in different tabs
-  prompt      = false
 [difftool "nvimdiff"]
-  # $LOCAL: the temporary file containing the contents of the diff pre-image
-  # $REMOTE: the temporary file containing the contents of the diff post-image.
-  # e.g., git difftool pre-image-commit-hash..post-image-commit-hash
+  # $LOCAL (pre-image): file contents before the change <old>
+  # $REMOTE (post-image): file contents after the change <new>
+  # e.g., git difftool <old>..<new>
   cmd         = "nvim -d \"$LOCAL\" \"$REMOTE\" -c 'wincmd l | norm ]c'"
 [merge]
   # delta [merge (default), diff3 (include $BASE text), zdiff3 (git>=2.35)]
   conflictstyle = diff3
   tool          = nvimdiff
-  # nvimdiff  layout="(LOCAL,BASE,REMOTE)/MERGED" # default layout
-  # nvimdiff1 layout="@LOCAL,REMOTE"
-  # nvimdiff2 layout="LOCAL,MERGED,REMOTE"
-  # nvimdiff3 layout="MERGED"
 [mergetool]
   prompt      = true
-  # prevent generating .orig files
-  keepBackup  = false
-# @link: https://github.com/git/git/blob/master/mergetools/vimdiff
+  ;keepBackup  = false # prevent generating .orig files
 [mergetool "nvimdiff"]
   # nvimdiff: layout="(LOCAL,BASE,REMOTE)/MERGED"
   cmd         = "nvim -d \"$LOCAL\" \"$BASE\" \"$REMOTE\" \"$MERGED\" \
     -c 'wincmd 3l|wincmd J|norm ]c'"
-
-  # custom nvimdiff: layout="LOCAL,REMOTE/MERGED"
-  ; cmd         = "nvim -d \"$LOCAL\" \"$BASE\" \"$REMOTE\" \"$MERGED\" \
-  ;   -c 'wincmd l|hide|wincmd 2l|wincmd J|norm ]c'"
-
-  # nvimdiff1: layout="@LOCAL,REMOTE"
-  ; cmd         = "nvim -d \"$LOCAL\" \"$BASE\" \"$REMOTE\" \"$MERGED\" \
-  ;   -c 'wincmd 3l|diffoff|hide | wincmd h|diffoff|hide | norm ]c' \
-  ;   -c \"lua \
-  ;     local api=vim.api \
-  ;     local group_id=api.nvim_create_augroup('nvimdiff', {clear=true}) \
-  ;     local LOCAL, MERGED = 1, 4 \
-  ;     api.nvim_create_autocmd('BufWritePost', { \
-  ;       pattern = api.nvim_buf_get_name(LOCAL), \
-  ;       group = group_id, \
-  ;       callback = function() \
-  ;         local lines = api.nvim_buf_get_lines(LOCAL, 0, -1, true) \
-  ;         api.nvim_buf_set_lines(MERGED, 0, -1, true, lines) \
-  ;         api.nvim_win_set_buf(0, MERGED) \
-  ;         vim.cmd('update') \
-  ;         api.nvim_win_set_buf(0, LOCAL) \
-  ;       end \
-  ;     }) \
-  ;   \""
-
-  # custom nvimdiff1: layout="REMOTE,@LOCAL"
-  ; cmd         = "nvim -d \"$LOCAL\" \"$BASE\" \"$REMOTE\" \"$MERGED\" \
-  ;   -c 'wincmd 3l|diffoff|hide | wincmd h|diffoff|hide | wincmd L|norm ]c' \
-  ;   -c \"lua \
-  ;     local api=vim.api \
-  ;     local group_id=api.nvim_create_augroup('nvimdiff', {clear=true}) \
-  ;     local LOCAL, MERGED = 1, 4 \
-  ;     api.nvim_create_autocmd('BufWritePost', { \
-  ;       pattern = api.nvim_buf_get_name(LOCAL), \
-  ;       group = group_id, \
-  ;       callback = function() \
-  ;         local lines = api.nvim_buf_get_lines(LOCAL, 0, -1, true) \
-  ;         api.nvim_buf_set_lines(MERGED, 0, -1, true, lines) \
-  ;         api.nvim_win_set_buf(0, MERGED) \
-  ;         vim.cmd('update') \
-  ;         api.nvim_win_set_buf(0, LOCAL) \
-  ;       end \
-  ;     }) \
-  ;   \""
-
-  # nvimdiff2: layout="LOCAL,MERGED,REMOTE"
-  ; cmd         = "nvim -d \"$LOCAL\" \"$BASE\" \"$REMOTE\" \"$MERGED\" \
-  ;   -c 'wincmd l|hide|wincmd l|wincmd L|wincmd h|norm ]c'"
-
-  # nvimdiff3: layout="MERGED"
-  ; cmd         = "nvim -d \"$LOCAL\" \"$BASE\" \"$REMOTE\" \"$MERGED\" \
-  ;   -c \"hide|hide|hide|silent execute 'bufdo diffthis'|norm ]c\""
 [alias]
-  ##### BASIC #####
   alias       = "!git config --list | grep alias | cut -c 7-"
-  a           = "!f() { \
-    if [ -n \"$*\" ]; then \
-      git add \"$@\"; \
-    else \
-      files=$(git ls-files -m \
-        | fzf --multi --preview='git diff --color=always -- {}'); \
-      if [ -n \"$files\" ]; then \
-        echo \"$files\" | xargs -d '\\n' git add; \
-        printf \"%s\\n\" \"$files\"; \
-      fi; \
-    fi; \
-  }; f"
+  a           = "!f(){ \
+if [ \"$#\" -gt 0 ]; then \
+  git add \"$@\"; \
+  return; \
+fi; \
+files=$(git ls-files -m | fzf --multi --preview='git diff --color=always -- {}'); \
+[ -z \"$files\" ] && return 1; \
+printf '%s' \"$files\" | xargs -d '\\n' -r git add --; \
+};f"
   aa          = add --all
   ai          = add --interactive
   ap          = add --patch
@@ -155,84 +90,80 @@
   cp          = commit --patch
   # creates a placeholder commit, finalize later (rebase --autoSquash)
   cf          = "!f() { \
-    modes=\"--fixup=\t(Fixup: Merge code only)\n\
+MODES='--fixup=\t(Fixup: Merge code only)\n\
 --fixup=amend:\t(Amend: Merge code + Change message)\n\
---fixup=reword:\t(Reword: Change message only)\"; \
-    if [ $# -eq 0 ]; then \
-      mode=$(printf \"%s\" \"$modes\" | column -t -s '\t' | \
-        fzf --accept-nth='1'); \
-      [ -z \"$mode\" ] && return 1; \
-      target=$(git log --oneline -n 50 --color=always \
-        --pretty=format:'%C(green)%h %C(blue)%cd %C(reset)%s%C(auto)%d' \
-        --date=format:'%Y-%m-%d %H:%M %z' | fzf --accept-nth='1' \
-        --ansi --no-sort --header=\"git $mode<commit>\"); \
-      [ -z \"$target\" ] && return 1; \
-      git commit $mode\"$target\"; \
-    else \
-      target=$1; \
-      mode=$(printf \"%s\" \"$modes\" | sed \"s/\t/$target\t/\" | \
-        column -t -s '\t' | fzf --accept-nth='1'); \
-      [ -z \"$mode\" ] && return 1; \
-      git commit $mode\"$target\"; \
-    fi; \
-  }; f"
+--fixup=reword:\t(Reword: Change message only)'; \
+if [ \"$#\" -eq 0 ]; then \
+  mode=$(printf '%b' \"$MODES\" | fzf --no-multi --accept-nth='1'); \
+  [ -z \"$mode\" ] && return 1; \
+  target=$(git log --oneline -n 50 --color=always \
+    --pretty=format:'%C(green)%h %C(blue)%cd %C(reset)%s%C(auto)%d' \
+    --date=format:'%Y-%m-%d %H:%M %z' | fzf --no-multi --accept-nth='1' \
+    --ansi --no-sort --header=\"git $mode<commit>\"); \
+  [ -z \"$target\" ] && return 1; \
+  git commit \"$mode$target\"; \
+else \
+  target=\"$1\"; \
+  mode=$(printf '%b' \"$MODES\" | fzf --no-multi --accept-nth='1' \
+    --header=\"git commit <mode>:$target\"); \
+  [ -z \"$mode\" ] && return 1; \
+  git commit \"$mode$target\"; \
+fi; \
+};f"
   b           = branch
   ba          = branch -avv
   bl          = branch --list -vv
   bm          = branch --merged
   bnm         = branch --no-merged
   co          = "!f() { \
-    if [ -n \"$*\" ]; then \
-      git checkout \"$@\"; \
-    else \
-    branch=$(git branch --list --sort=-committerdate \
-      --format='%(refname:short)' | fzf --no-multi \
-      --preview 'git log --oneline --graph --color=always -n 5 {}'); \
-      if [ -n \"$branch\" ]; then \
-        git checkout \"$branch\"; \
-      fi; \
-    fi; \
-  }; f"
+if [ \"$#\" -gt 0 ]; then \
+  git checkout \"$@\"; \
+else \
+  br=$(git branch --list --sort=-committerdate --format='%(refname:short)' | \
+    fzf --no-multi --preview 'git log --oneline --graph --color=always -n 5 {}'); \
+  [ -n \"$br\" ] && git checkout \"$br\"; \
+fi; \
+}; f"
   cob         = checkout -b
   coo         = switch -
   copr = "!f() { \
-    if [ $# -eq 1 ] && command -v gh >/dev/null 2>&1; then \
-      gh pr checkout \"$1\"; \
-    elif [ $# -eq 2 ]; then \
-      git fetch \"$1\" \"pull/$2/head:pr-$2\" && git checkout \"pr-$2\"; \
-    elif command -v gh >/dev/null 2>&1; then \
-      remote=$(git remote -v | awk '{print $1,$2}' | sort -u | column -t | \
-        fzf --accept-nth='2'); \
-      if [ -z \"$remote\" ]; then return; fi; \
-      pr_num=$(gh pr list --limit 100 -R \"$remote\" | fzf --accept-nth='1' \
-        --preview 'gh pr view {1}'); \
-      if [ -z \"$pr_num\" ]; then return; fi; \
-      git fetch \"$remote\" \"pull/$pr_num/head:pr-$pr_num\" \
-        && git checkout \"pr-$pr_num\"; \
-    else \
-      echo 'Usage: git copr <remote> <pr#> OR install \"gh\" with fzf.' >&2; \
-      return 1; \
-    fi; \
-  }; f"
+if [ \"$#\" -eq 1 ] && command -v gh >/dev/null 2>&1; then \
+  gh pr checkout \"$1\"; \
+elif [ \"$#\" -eq 2 ]; then \
+  git fetch \"$1\" \"pull/$2/head:pr-$2\" && git checkout \"pr-$2\"; \
+elif command -v gh >/dev/null 2>&1; then \
+  remote=$(git remote -v | awk '{print $1,$2}' | sort -u | column -t | \
+    fzf --accept-nth='2'); \
+  [ -z \"$remote\" ] && return 1; \
+  pr_num=$(gh pr list --limit 100 -R \"$remote\" | fzf --accept-nth='1' \
+    --preview 'gh pr view {1}'); \
+  [ -z \"$pr_num\" ] && return 1; \
+  git fetch \"$remote\" \"pull/$pr_num/head:pr-$pr_num\" \
+    && git checkout \"pr-$pr_num\"; \
+else \
+  echo 'Usage: git copr <remote> <pr#> OR install `gh` with fzf.' >&2; \
+  return 1; \
+fi; \
+}; f"
   d           = diff
   dc          = diff --cached
   df          = "!f() { \
-    if [ \"$#\" -ne 0 ]; then \
-      local file=\"$1\"; \
-    else \
-      local file=$(git ls-files | fzf); \
-    fi; \
-    if [ -n \"$file\" ]; then \
-      local commit=$(git log --follow --format='%C(green)%h %C(blue)%cd \
-        %C(reset)%s%C(auto)%d' --date=format:'%Y-%m-%d %H:%M %z' -- \"$file\" \
-        | fzf --ansi --no-sort --header \"Diff: $file\" \
-        --preview \"git show {1} -- '$file' | delta\" \
-        --accept-nth='1'); \
-      if [ -n \"$commit\" ]; then \
-        git show $commit -- \"$file\" | delta; \
-      fi; \
-    fi; \
-  }; f"
+if [ \"$#\" -gt 0 ]; then \
+  file=\"$1\"; \
+else \
+  file=$(git ls-files | fzf); \
+fi; \
+if [ -n \"$file\" ]; then \
+  commit=$(git log --follow --format='%C(green)%h %C(blue)%cd \
+    %C(reset)%s%C(auto)%d' --date=format:'%Y-%m-%d %H:%M %z' -- \"$file\" \
+    | fzf --ansi --no-sort --header \"Diff: $file\" \
+    --preview \"git show {1} -- '$file' | delta\" \
+    --accept-nth='1'); \
+  if [ -n \"$commit\" ]; then \
+    git show $commit -- \"$file\" | delta; \
+  fi; \
+fi; \
+}; f"
   dn          = "!git --no-pager diff"
   dt          = difftool
   dump        = cat-file -p
@@ -244,16 +175,16 @@
   m           = merge
   mt          = mergetool
   open        = "!f() { \
-    if [ -n \"$*\" ]; then \
-      gh browse \"$@\"; \
-    else \
-      url=$(git remote -v | awk '{print $1, $2}' | sort -u | column -t | \
-      fzf --no-multi --accept-nth='2'); \
-      if [ -n \"$url\" ]; then \
-        gh browse -R \"$url\"; \
-      fi; \
-    fi; \
-  }; f"
+if [ \"$#\" -gt 0 ]; then \
+  gh browse \"$@\"; \
+else \
+  url=$(git remote -v | awk '{print $1, $2}' | sort -u | column -t | \
+  fzf --no-multi --accept-nth='2'); \
+  if [ -n \"$url\" ]; then \
+    gh browse -R \"$url\"; \
+  fi; \
+fi; \
+}; f"
   pl          = pull
   plr         = pull --rebase
   ps          = push
@@ -284,22 +215,20 @@
   ##### LOG #####
   # single line
   l           = "log --decorate --all --date=format:'%a %Y-%m-%d %H:%M %z' \
-    --pretty=format:'%C(green)%h %C(reset)%<(10,trunc)%an %C(blue)%cd \
-%C(reset)%s%C(auto)%d'"
-  # graph, relative time
-  lg          = "log --decorate --all --graph \
-    --pretty=format:'%C(green)%h %C(reset)%<(10,trunc)%an %C(blue)%cr \
-%C(reset)%s%C(auto)%d'"
+    --pretty=format:'%C(green)%h %C(reset)%<(10,trunc)%an %C(blue)%cd %C(reset)%s%C(auto)%d'"
+  # detailed with graph & gpg & file change size
+  la          = log --stat --abbrev-commit --show-signature --graph --decorate
   # with file status (Add,Modified,Deleted)
   lf          = "log --decorate --all --date=format:'%a %Y-%m-%d %H:%M %z' \
-    --pretty=format:'%C(green)%h %C(reset)%<(10,trunc)%an %C(blue)%cd \
-%C(reset)%s%C(auto)%d' --name-status"
-  # detailed with graph & gpg & file change size
-  ll          = log --stat --abbrev-commit --show-signature --graph --decorate
+    --pretty=format:'%C(green)%h %C(reset)%<(10,trunc)%an %C(blue)%cd %C(reset)%s%C(auto)%d' --name-status"
+  # graph, relative time
+  lg          = "log --decorate --all --graph \
+    --pretty=format:'%C(green)%h %C(reset)%<(10,trunc)%an %C(blue)%cr %C(reset)%s%C(auto)%d'"
+  # oneline graph
+  lo          = "log --oneline --graph"
   # g fgrep "words": grep words diffs
-  fgrep       = "!f() { git log --pretty=format:\"%h %cd %<(6,trunc)[%cn] \
-    %s%d\" --date=relative -S'pretty' -S\"$@\" | fzf | awk '{print $1}' | \
-    xargs -I {} git diff {}^ {}; }; f"
+  fgrep       = "!f() { git log --pretty=format:'%h %cd %<(6,trunc)[%cn] %s%d' \
+    --date=relative -S\"$1\" | fzf --accept-nth='1' | xargs -I {} git diff {}^ {}; }; f"
   # log for each committer
   sl          = shortlog
   log-changed = whatchanged --graph --decorate --all
@@ -309,22 +238,17 @@
 
   ##### FILTER/LIST FILES #####
   # list files changed: git chsince <old-commit>..<new-commit>
-  chsince     = show --pretty= --name-only
+  changed-since     = show --pretty= --name-only
   # show files changed in HEAD
-  ch          = show --pretty= --name-only HEAD
   changed     = show --pretty= --name-only HEAD
   # list tracked
   # 1. current state: git indexed
   # 2. specific commit: git indexed HEAD
-  in          = "!f() { if [ -z \"$1\" ]; then git ls-files --stage | \
-    cut -f 2-; else git ls-tree --full-tree --name-only -r \"$1\"; fi; }; f"
   indexed     = "!f() { if [ -z \"$1\" ]; then git ls-files --stage | \
     cut -f 2-; else git ls-tree --full-tree --name-only -r \"$1\"; fi; }; f"
   # list ignored
-  ig          = ls-files -o -i --exclude-standard
   ignored     = ls-files -o -i --exclude-standard
   # list unmerged
-  unm         = ls-files -u
   unmerged    = ls-files -u
 
   ##### RESTORE ACTIONS #####

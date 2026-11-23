@@ -1,4 +1,4 @@
-#!/usr/bin/env sh
+#!/bin/sh
 
 RESET='\033[0m'
 BOLD='\033[1m'

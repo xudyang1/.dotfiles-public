@@ -1,9 +1,10 @@
-#!/usr/bin/env sh
-# shellcheck shell=sh disable=SC1091,SC2015
+#!/bin/sh
 set -eu
 
 script_dir=$(dirname -- "$(realpath -- "$0")")
-[ -f "$script_dir/msg.sh" ] && . "$script_dir/msg.sh" || msg() { echo "$@"; }
+if ! . "$script_dir/msg.sh" 2>/dev/null; then
+  msg() { echo "$@"; }
+fi
 
 APPIMAGE_NAME="nvim-linux-x86_64.appimage"
 dest_dir=$(pwd)

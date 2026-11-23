@@ -1,13 +1,11 @@
 # vim: filetype=sh
-# shellcheck shell=sh
-
+# shellcheck shell=bash
 FD_COMMAND='fd'
-if [ -f '/etc/debian_version' ]; then
+if command -v fdfind >/dev/null 2>&1; then
   FD_COMMAND='fdfind'
 fi
 
-FDFIND_DEFAULT_OPTIONS='--hidden --color=never \
--E .git -E node_modules -E .dotfiles -E .cache -E .local'
+FDFIND_DEFAULT_OPTIONS='--hidden --color=never -E .git -E node_modules -E .dotfiles -E .cache -E .local'
 
 export FZF_DEFAULT_COMMAND="$FD_COMMAND --type file $FDFIND_DEFAULT_OPTIONS"
 export FZF_DEFAULT_OPTS="--multi --reverse --cycle --height='40%' \
@@ -21,15 +19,13 @@ export FZF_DEFAULT_OPTS="--multi --reverse --cycle --height='40%' \
 --bind='alt-G:last' \
 --bind='alt-a:toggle-all' \
 --bind='alt-s:toggle-sort' \
---bind='ctrl-y:execute-silent( \
-  b64=\$(echo {} | base64 | tr -d \"\n\"); \
-  if [ -n \"\$TMUX\" ]; then \
-    esc=\"\ePtmux;\e\e]52;c;\$b64\a\e\\\\\"; \
-  else \
-    esc=\"\e]52;c;\$b64\a\"; \
-  fi; \
-  printf \"\$esc\" > /dev/tty; \
-)+change-header(Copied to clipboard!)'"
+--bind='ctrl-y:execute-silent(input=\$(printf \"%s\" {}); \
+if [ -n \"\$TMUX\" ]; then \
+  printf \"%s\" \"\$input\" | tmux load-buffer -w -; \
+else \
+  b64=\$(printf \"%s\" \"\$input\" | base64 | tr -d \"\\n\"); \
+  printf \"\\033]52;c;%s\\033\\\\\" \"\$b64\" > /dev/tty; \
+fi)+change-header(Copied to clipboard.)'"
 
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 export FZF_CTRL_T_OPTS="--preview='head -500 {}' \
