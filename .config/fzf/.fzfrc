@@ -1,10 +1,12 @@
 # vim: filetype=sh
-# shellcheck shell=sh
+# shellcheck shell=bash
 
 FD_COMMAND='fd'
+if command -v fdfind >/dev/null 2>&1; then
+  FD_COMMAND='fdfind'
+fi
 
-FDFIND_DEFAULT_OPTIONS='--hidden --color=never \
-  -E .git -E node_modules -E .dotfiles -E .cache -E .local -E AppData -E scoop'
+FDFIND_DEFAULT_OPTIONS='--hidden --color=never -E .git -E node_modules -E .dotfiles -E .cache -E .local -E AppData -E scoop'
 
 export FZF_DEFAULT_COMMAND="$FD_COMMAND --type file $FDFIND_DEFAULT_OPTIONS"
 export FZF_DEFAULT_OPTS="--multi --reverse --cycle --height='40%' \
@@ -19,10 +21,10 @@ export FZF_DEFAULT_OPTS="--multi --reverse --cycle --height='40%' \
 --bind='alt-a:toggle-all' \
 --bind='alt-s:toggle-sort' \
 --bind='ctrl-y:execute-silent( \
-  echo {} | powershell -NonInteractive -NoProfile -Command \
-    \"[Console]::InputEncoding=[System.Text.Encoding]::UTF8; \
-    Set-Clipboard ([Console]::In.ReadToEnd())\" \
-)+change-header(Copied to clipboard!)'"
+printf \"%s\" {} | powershell -NonInteractive -NoProfile -Command \
+\"[Console]::InputEncoding=[System.Text.Encoding]::UTF8; \
+Set-Clipboard ([Console]::In.ReadToEnd())\" \
+)+change-header(Copied to clipboard.)'"
 
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 export FZF_CTRL_T_OPTS="--preview='head -500 {}' \
