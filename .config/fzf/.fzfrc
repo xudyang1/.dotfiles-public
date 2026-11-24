@@ -19,11 +19,11 @@ export FZF_DEFAULT_OPTS="--multi --reverse --cycle --height='40%' \
 --bind='alt-G:last' \
 --bind='alt-a:toggle-all' \
 --bind='alt-s:toggle-sort' \
---bind='ctrl-y:execute-silent(input=\$(printf \"%s\" {}); \
+--bind='ctrl-y:execute-silent( \
 if [ -n \"\$TMUX\" ]; then \
-  printf \"%s\" \"\$input\" | tmux load-buffer -w -; \
+  printf \"%s\" {} | tmux load-buffer -w -; \
 else \
-  b64=\$(printf \"%s\" \"\$input\" | base64 | tr -d \"\\n\"); \
+  b64=\$(printf \"%s\" {} | base64 | tr -d \"\\n\"); \
   printf \"\\033]52;c;%s\\033\\\\\" \"\$b64\" > /dev/tty; \
 fi)+change-header(Copied to clipboard.)'"
 

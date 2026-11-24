@@ -19,16 +19,15 @@ bind 'set show-all-if-ambiguous on'
 bind 'set bell-style none'
 # ctrl+x,ctrl+y: copy command line to system clipboard
 bind -x "\"\\C-x\\C-y\": ( \
-  content=\"\$READLINE_LINE\"; \
-  [[ -z \"\$content\" ]] && exit 0; \
+if [[ -n \"\$READLINE_LINE\" ]]; then \
   if [[ -n \"\$TMUX\" ]]; then \
-    printf '%s' \"\$content\" | tmux load-buffer -w -; \
+    printf '%s' \"\$READLINE_LINE\" | tmux load-buffer -w -; \
   else \
-    b64_content=\$(printf '%s' \"\$content\" | base64 | tr -d '\\n'); \
-    printf '\\033]52;c;%s\\033\\\\' \"\$b64_content\"; \
+    b64=\$(printf '%s' \"\$READLINE_LINE\" | base64 | tr -d '\\n'); \
+    printf '\\033]52;c;%s\\033\\\\' \"\$b64\"; \
   fi; \
-  printf '%s\\n' '(Copied to clipboard.)' >&2 \
-)"
+  printf '%s\\n' '(Copied to clipboard.)' >&2; \
+fi)"
 
 prepend_path() {
   if [[ -d "$1" ]] && ! [[ ":$PATH:" == *":$1:"* ]]; then
@@ -106,7 +105,7 @@ dir='\[\033[1;32m\]\w\[\033[0m\]'  # bold green
 # shellcheck disable=2016
 git='$(__git_ps1 "(%s)")'
 # shellcheck disable=2016
-exit_code='$(s=$?;(( s )) && printf "\[\033[0;31m\]($s)\[\033[0m\]")' # red
+exit_code='$(s=$?;(( s )) && printf "\001\033[0;31m\002(%s)\001\033[0m\002" "$s")' # red
 PS1="${osc0}${osc7}${osc133A}${time} ${user_host}${dir} ${git}"'\$'"${exit_code} "
 
 unset user_host osc0 osc7 osc133A time dir git exit_code

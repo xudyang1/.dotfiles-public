@@ -145,7 +145,8 @@ gcb() {
     /mnt/c/Windows/System32/WindowsPowershell/v1.0/powershell.exe \
       -NonInteractive -NoProfile -Command \
       "[Console]::OutputEncoding=[System.Text.Encoding]::UTF8; \
-      [Console]::Out.Write((Get-Clipboard -Raw) -replace \"\`r\", \"\")"
+      \$text=(Get-Clipboard -Raw).Replace(\"\`r\`n\", \"\`n\"); \
+      [Console]::Out.Write(\$text)"
   else
     echo "Error: No 'get' clipboard utility found." >&2
     return 1
