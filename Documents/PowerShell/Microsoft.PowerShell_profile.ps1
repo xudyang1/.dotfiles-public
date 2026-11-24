@@ -350,42 +350,27 @@ function fkill {
   }
 }
 # fzf keybindings
-function fd-options{
-  return @(
-    '--hidden', '--color', 'never',
-    '-E', '.git', '-E', 'node_modules', '-E', '.dotfiles',
-    '-E', '.cache', '-E', '.local', '-E', 'AppData', '-E','scoop'
-  )
-}
-function fzf-default-command {
-  return "fd --type file $((fd-options) -join ' ')"
-}
-function fzf-default-opts {
-  return @(
-    "--with-shell='pwsh -NonInteractive -NoProfile -Command'",
-    '--multi', '--reverse', '--cycle', "--height='40%'",
-    "--info='inline'", '--no-separator', "--tiebreak='length,index'",
-    "--preview='echo {}'", "--preview-window='right:100:wrap:cycle:hidden'",
-    "--bind='alt-p:toggle-preview'",
-    "--bind='alt-j:preview-half-page-down'",
-    "--bind='alt-k:preview-half-page-up'",
-    "--bind='alt-l:kill-line'",
-    "--bind='alt-g:first'",
-    "--bind='alt-G:last'",
-    "--bind='alt-a:toggle-all'",
-    "--bind='alt-s:toggle-sort'",
-    "--bind='ctrl-y:execute-silent( `
-    echo {} | Set-Clipboard)+change-header(Copied to clipboard!)'"
-  )
-}
-$env:FZF_DEFAULT_COMMAND=fzf-default-command
-$env:FZF_DEFAULT_OPTS=(fzf-default-opts) -join ' '
+$FDFIND_DEFAULT_OPTIONS='--hidden --color never -E .git -E node_modules -E .dotfiles -E .cache -E .local -E AppData -E scoop'
+$env:FZF_DEFAULT_COMMAND="fd --type file $FDFIND_DEFAULT_OPTIONS"
+$env:FZF_DEFAULT_OPTS="--with-shell='pwsh -NonInteractive -NoProfile -Command' `
+--multi --reverse --cycle --height='40%' `
+--info='inline' --no-separator --tiebreak='length,index' `
+--preview='echo {}' --preview-window='right:100:wrap:cycle:hidden' `
+--bind='alt-p:toggle-preview' `
+--bind='alt-j:preview-half-page-down' `
+--bind='alt-k:preview-half-page-up' `
+--bind='alt-l:kill-line' `
+--bind='alt-g:first' `
+--bind='alt-G:last' `
+--bind='alt-a:toggle-all' `
+--bind='alt-s:toggle-sort' `
+--bind='ctrl-y:execute-silent(echo {} | Set-Clipboard)+change-header(Copied to clipboard!)'"
 Set-PSReadLineKeyHandler -Chord 'Ctrl+t' -ScriptBlock {
   [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
   $FZF_CTRL_T_OPTS=@(
     '--preview', 'Get-Content {} -TotalCount 499',
     # '--bind', 'ctrl-v:become(nvim {})',
-    '--bind', "ctrl-g:reload($(fzf-default-command) --no-ignore)"
+    '--bind', "ctrl-g:reload($env:FZF_DEFAULT_COMMAND) --no-ignore)"
   )
   $file = fzf @FZF_CTRL_T_OPTS
   if ($file) {
@@ -396,10 +381,9 @@ Set-PSReadLineKeyHandler -Chord 'Ctrl+t' -ScriptBlock {
 }
 Set-PSReadLineKeyHandler -Chord 'Alt+c' -ScriptBlock {
   [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
-  $fdOptions = fd-options
   $dir = ''
   if (Get-Command fd) {
-    $dir=fd --type directory @fdOptions | fzf
+    $dir=fd --type directory @($FDFIND_DEFAULT_OPTIONS -split ' ') | fzf
   }else{
     Write-Error "Error: fd not installed."
     return 1
